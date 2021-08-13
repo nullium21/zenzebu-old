@@ -41,7 +41,8 @@ project 'zenzebu'
 
     includedirs {
         '%{prj.location}',
-        '%{prj.location}/entt/src'
+        '%{prj.location}/entt/src',
+        '%{prj.location}/src'
     }
 
     links { 'zenzebu-lua' }
