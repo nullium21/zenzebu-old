@@ -6,7 +6,7 @@
 
 using std::shared_ptr;
 
-namespace zz {
+namespace zz::log {
     class log {
     public:
         static void init();
@@ -19,14 +19,14 @@ namespace zz {
     };
 }
 
-#define ZZ_CORE_TRACE(...)  ::zz::log::core_logger()->trace(__VA_ARGS__)
-#define ZZ_CORE_INFO(...)   ::zz::log::core_logger()->info(__VA_ARGS__)
-#define ZZ_CORE_WARN(...)   ::zz::log::core_logger()->warn(__VA_ARGS__)
-#define ZZ_CORE_ERROR(...)  ::zz::log::core_logger()->error(__VA_ARGS__)
-#define ZZ_CORE_FATAL(...)  ::zz::log::core_logger()->fatal(__VA_ARGS__)
+#define ZZ_CORE_TRACE(...)  ::zz::log::log::core_logger()->trace(__VA_ARGS__)
+#define ZZ_CORE_INFO(...)   ::zz::log::log::core_logger()->info(__VA_ARGS__)
+#define ZZ_CORE_WARN(...)   ::zz::log::log::core_logger()->warn(__VA_ARGS__)
+#define ZZ_CORE_ERROR(...)  ::zz::log::log::core_logger()->error(__VA_ARGS__)
+#define ZZ_CORE_FATAL(...)  ::zz::log::log::core_logger()->fatal(__VA_ARGS__)
 
-#define ZZ_TRACE(...)       ::zz::log::main_logger()->trace(__VA_ARGS__)
-#define ZZ_INFO(...)        ::zz::log::main_logger()->info(__VA_ARGS__)
-#define ZZ_WARN(...)        ::zz::log::main_logger()->warn(__VA_ARGS__)
-#define ZZ_ERROR(...)       ::zz::log::main_logger()->error(__VA_ARGS__)
-#define ZZ_FATAL(...)       ::zz::log::main_logger()->fatal(__VA_ARGS__)
+#define ZZ_TRACE(...)       ::zz::log::log::main_logger()->trace(__VA_ARGS__)
+#define ZZ_INFO(...)        ::zz::log::log::main_logger()->info(__VA_ARGS__)
+#define ZZ_WARN(...)        ::zz::log::log::main_logger()->warn(__VA_ARGS__)
+#define ZZ_ERROR(...)       ::zz::log::log::main_logger()->error(__VA_ARGS__)
+#define ZZ_FATAL(...)       ::zz::log::log::main_logger()->fatal(__VA_ARGS__)

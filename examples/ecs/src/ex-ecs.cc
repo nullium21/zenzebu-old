@@ -2,7 +2,7 @@
 #include "zz/log.h"
 #include "zz/ecs.h"
 
-using namespace zz;
+using namespace zz::log;
 using namespace zz::app;
 
 struct dbg_out {
