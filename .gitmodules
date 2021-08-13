@@ -1,0 +1,4 @@
+[submodule "zenzebu/spdlog"]
+	path = zenzebu/spdlog
+	url = https://github.com/gabime/spdlog
+	branch = v1.x
