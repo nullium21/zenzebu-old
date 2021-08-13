@@ -1,3 +1,5 @@
+require 'premake/export-compile-commands'
+
 workspace 'zenzebu-v2'
     architecture 'x64'
 

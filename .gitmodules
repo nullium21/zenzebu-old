@@ -9,3 +9,6 @@
 [submodule "zenzebu/entt"]
 	path = zenzebu/entt
 	url = https://github.com/skypjack/entt
+[submodule "premake/export-compile-commands"]
+	path = premake/export-compile-commands
+	url = https://github.com/tarruda/premake-export-compile-commands
