@@ -1,6 +1,6 @@
 #include "zz/app.h"
 
-using namespace zz;
+using namespace zz::app;
 
 application::application() {}
 application::~application() {}

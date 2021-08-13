@@ -1,6 +1,6 @@
 #pragma once
 
-namespace zz {
+namespace zz::app {
     class application {
     public:
         application();
