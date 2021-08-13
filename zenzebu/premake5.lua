@@ -36,10 +36,12 @@ project 'zenzebu'
 
     files {
         'src/**.cc', 'src/**.h',
+        'entt/src/**.hpp'
     }
 
     includedirs {
-        '%{prj.location}'
+        '%{prj.location}',
+        '%{prj.location}/entt/src'
     }
 
     links { 'zenzebu-lua' }
