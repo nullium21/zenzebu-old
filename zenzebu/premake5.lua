@@ -1,7 +1,32 @@
+project 'zenzebu-lua'
+    kind 'sharedlib'
+
+    language 'c'
+    cdialect 'c11'
+
+    targetdir (tgt_dir)
+    objdir    (obj_dir)
+
+    files {
+        'lua/*.c', 'lua/*.h'
+    }
+
+    removefiles {
+        'lua/onelua.c', 'lua/lua.c',
+        'lua/testes/**',
+        'lua/manual/**'
+    }
+
+    filter "configurations:debug"
+        symbols "on"
+    filter "configurations:release"
+        optimize "on"
+
+
 project 'zenzebu'
     kind 'sharedlib'
 
-    -- dependson {}
+    dependson { 'zenzebu-lua' }
 
     language 'c++'
     cppdialect 'c++17'
@@ -10,10 +35,14 @@ project 'zenzebu'
     objdir    (obj_dir)
 
     files {
-        'src/**.cc', 'src/**.h'
+        'src/**.cc', 'src/**.h',
     }
 
-    includedirs {}
+    includedirs {
+        '%{prj.location}'
+    }
+
+    links { 'zenzebu-lua' }
 
     filter "system:linux"
         defines { "ZZ_LINUX", "ZZ_SHAREDLIB" }

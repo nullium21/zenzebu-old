@@ -6,5 +6,8 @@ workspace 'zenzebu-v2'
 tgt_dir = '%{wks.location}/bin-%{cfg.architecture}/%{prj.name}-%{cfg.buildcfg}'
 obj_dir = '%{wks.location}/obj-%{cfg.architecture}/%{prj.name}-%{cfg.buildcfg}'
 
-include 'zenzebu'
+group 'engine'
+    include 'zenzebu'
+group ''
+
 include 'examples'
