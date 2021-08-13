@@ -2,3 +2,7 @@
 	path = zenzebu/spdlog
 	url = https://github.com/gabime/spdlog
 	branch = v1.x
+[submodule "zenzebu/lua"]
+	path = zenzebu/lua
+	url = https://github.com/nullium21/zenzebu-lua
+	branch = v5.4.0
