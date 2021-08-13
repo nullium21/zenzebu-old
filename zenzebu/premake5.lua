@@ -36,12 +36,12 @@ project 'zenzebu'
 
     files {
         'src/**.cc', 'src/**.h',
-        'entt/src/**.hpp'
+        'entt/single_include/**.hpp'
     }
 
     includedirs {
         '%{prj.location}',
-        '%{prj.location}/entt/src',
+        '%{prj.location}/entt/single_include',
         '%{prj.location}/src'
     }
 

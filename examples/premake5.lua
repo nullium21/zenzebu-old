@@ -33,4 +33,38 @@ project 'ex.logging'
         defines { "ZZ_RELEASE" }
         optimize "on"
 
+project 'ex.ecs'
+    location 'ecs/'
+    kind 'consoleapp'
+
+    dependson { 'zenzebu' }
+
+    language 'c++'
+    cppdialect 'c++17'
+
+    targetdir (tgt_dir)
+    objdir    (obj_dir)
+
+    files {
+        'ecs/src/**.cc'
+    }
+
+    includedirs {
+        '%{wks.location}/zenzebu/src',
+        '%{wks.location}/zenzebu/entt/single_include'
+    }
+
+    links { 'zenzebu' }
+
+    filter "system:linux"
+        defines { "ZZ_LINUX", "ZZ_SHAREDLIB" }
+
+    filter "configurations:debug"
+        defines { "ZZ_DEBUG" }
+        symbols "on"
+
+    filter "configurations:release"
+        defines { "ZZ_RELEASE" }
+        optimize "on"
+
 group ''
