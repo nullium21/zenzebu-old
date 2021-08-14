@@ -1,6 +1,10 @@
 Makefile
 *.make
 
+*.cmake
+CMakeLists.txt
+.idea/
+
 bin-*/
 obj-*/
 
