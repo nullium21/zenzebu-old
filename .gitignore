@@ -11,3 +11,4 @@ obj-*/
 compile_commands/
 compile_commands.json
 .clangd/
+/cmake-build-debug/
