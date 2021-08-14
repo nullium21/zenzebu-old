@@ -27,3 +27,8 @@ template<typename... T>
 void ecs::remove(entity e) {
     entt_reg->remove<T...>(e);
 }
+
+template<typename... T>
+entt::view<T...> ecs::view() {
+    return entt_reg->view<T...>();
+}

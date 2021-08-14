@@ -10,6 +10,7 @@ namespace zz::ecs {
 
     using entt::registry;
     using entt::entity;
+    using entt::view;
 
     class ecs {
     public:
@@ -26,6 +27,9 @@ namespace zz::ecs {
 
         template<typename... T>
         static void remove(entity);
+
+        template<typename... T>
+        static view<T...> view();
     private:
         static shared_ptr<registry> entt_reg;
     };
