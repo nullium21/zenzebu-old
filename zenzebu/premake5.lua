@@ -57,3 +57,8 @@ project 'zenzebu'
     filter "configurations:release"
         defines { "ZZ_RELEASE" }
         optimize "on"
+
+    filter "system:linux"
+        files { "platform/linux/**.cc", "platform/linux/**.h" }
+    filter "system:windows"
+        files { "platform/windows/**.cc", "platform/linux/**.h" }
