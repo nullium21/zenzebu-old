@@ -4,6 +4,7 @@
 
 using namespace zz::log;
 using namespace zz::app;
+using namespace zz::ecs;
 
 struct dbg_out {
     std::string text;
@@ -12,8 +13,8 @@ struct dbg_out {
 
 class ecs_app: public application {
 private:
-    void update_ecs(entt::registry &registry) {
-        auto view = registry.view<const dbg_out>();
+    void update_ecs() {
+        auto view = ecs::entt()->view<const dbg_out>();
 
         view.each([](const auto &out) {
             ZZ_INFO("{0} {1}", out.id, out.text);
@@ -22,19 +23,18 @@ private:
 public:
     void run() override {
         log::init();
+        ecs::init();
 
         ZZ_INFO("starting ECS application");
 
-        entt::registry registry;
-
         for (auto i = 0u; i < 10u; i++) {
-            const auto e = registry.create();
-            registry.emplace<dbg_out>(e, "test", i);
+            const auto e = ecs::entt()->create();
+            ecs::entt()->emplace<dbg_out>(e, "text", i);
         }
 
         for (auto i = 0u; i < 10u; i++) {
             ZZ_INFO("update #{0}", i);
-            update_ecs(registry);
+            update_ecs();
         }
     }
 };
