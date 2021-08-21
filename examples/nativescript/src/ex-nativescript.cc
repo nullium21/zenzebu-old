@@ -26,11 +26,11 @@ public:
             sname << "native script for entity " << i;
             std::string name = sname.str();
 
-            std::function<void()> on_start = [name]() {
+            std::function<void(entt::entity)> on_start = [name](auto _) {
                 ZZ_INFO("script '{0}' on_start", name);
             };
 
-            std::function<void()> on_update = [name]() {
+            std::function<void(entt::entity)> on_update = [name](auto _) {
                 ZZ_INFO("script '{0}' on_update", name);
             };
 
