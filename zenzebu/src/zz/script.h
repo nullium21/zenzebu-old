@@ -2,8 +2,6 @@
 
 #include "zz/ecs.h"
 
-using namespace zz;
-
 namespace zz::scripting {
     struct native_script {
         std::string name;
@@ -12,5 +10,5 @@ namespace zz::scripting {
         std::function<void()> on_update;
     };
 
-    void update(ecs::registry &registry);
+    void update();
 }
