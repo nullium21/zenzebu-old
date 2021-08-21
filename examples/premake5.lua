@@ -23,7 +23,7 @@ project 'ex.logging'
     links { 'zenzebu' }
 
     filter "system:linux"
-        defines { "ZZ_LINUX", "ZZ_SHAREDLIB" }
+        defines { "ZZ_LINUX" }
 
     filter "configurations:debug"
         defines { "ZZ_DEBUG" }
@@ -57,7 +57,41 @@ project 'ex.ecs'
     links { 'zenzebu' }
 
     filter "system:linux"
-        defines { "ZZ_LINUX", "ZZ_SHAREDLIB" }
+        defines { "ZZ_LINUX" }
+
+    filter "configurations:debug"
+        defines { "ZZ_DEBUG" }
+        symbols "on"
+
+    filter "configurations:release"
+        defines { "ZZ_RELEASE" }
+        optimize "on"
+
+project 'ex.nativescript'
+    location 'nativescript/'
+    kind 'consoleapp'
+
+    dependson { 'zenzebu' }
+
+    language 'c++'
+    cppdialect 'c++17'
+
+    targetdir (tgt_dir)
+    objdir    (obj_dir)
+
+    files {
+        'nativescript/src/**.cc'
+    }
+
+    includedirs {
+        '%{wks.location}/zenzebu/src',
+        '%{wks.location}/zenzebu/entt/single_include'
+    }
+
+    links { 'zenzebu' }
+
+    filter "system:linux"
+        defines { "ZZ_LINUX" }
 
     filter "configurations:debug"
         defines { "ZZ_DEBUG" }
