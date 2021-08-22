@@ -34,6 +34,9 @@ project 'zenzebu'
     targetdir (tgt_dir)
     objdir    (obj_dir)
 
+    pchheader "zzpch.h"
+    pchheader "src/zzpch.cc"
+
     files {
         'src/**.cc', 'src/**.h',
         'entt/single_include/**.hpp'
