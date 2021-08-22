@@ -20,5 +20,5 @@ namespace zz::scripting {
         };
     }
 
-    void update(update_stage);
+    void update_scripts(update_stage);
 }

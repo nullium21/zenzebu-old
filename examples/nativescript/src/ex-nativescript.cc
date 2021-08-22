@@ -40,10 +40,10 @@ public:
             ecs::entt()->emplace<native::on_update_script>(e, on_update);
         }
 
-        zz::scripting::update(update_stage::us_oninit);
+        update_scripts(update_stage::us_oninit);
 
         for (auto i = 0u; i < 10u; i++) {
-            zz::scripting::update(update_stage::us_onupdate);
+            update_scripts(update_stage::us_onupdate);
         }
     }
 };

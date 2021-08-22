@@ -17,6 +17,6 @@ void update_native(update_stage stage) {
     NATIVE_UPDATE_STAGE(update);
 }
 
-void zz::scripting::update(update_stage stage) {
+void zz::scripting::update_scripts(update_stage stage) {
     update_native(stage);
 }
