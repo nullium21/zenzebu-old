@@ -47,7 +47,7 @@ void window::update() {
 }
 
 bool windowing::init() {
-    if (!windowing::initialized) {
+    // if (!initialized) {
         int success = glfwInit();
 
         if (!success) {
@@ -55,8 +55,8 @@ bool windowing::init() {
             return false;
         }
         
-        initialized = true;
-    }
+        // initialized = true;
+    // }
 
     auto view = ecs::entt()->view<window>();
 
@@ -68,8 +68,8 @@ bool windowing::init() {
 }
 
 bool windowing::update() {
-    if (!initialized && !init()) // init() will invoke only if !initialized
-        return false;
+    // if (!initialized && !init()) // init() will invoke only if !initialized
+    //     return false;
 
     auto view = ecs::entt()->view<window>();
     view.each([](window &wnd) {
@@ -80,13 +80,13 @@ bool windowing::update() {
 }
 
 bool windowing::deinit() {
-    if (initialized) {
+    // if (initialized) {
         ecs::entt()->clear<window>(); // lets hope this'll invoke the destructor
 
         glfwTerminate();
 
-        initialized = false;
-    }
+        // initialized = false;
+    // }
 
     return true;
 }

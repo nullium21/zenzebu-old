@@ -36,7 +36,7 @@ namespace zz {
 
         static bool deinit();
 
-        static bool initialized;
+        // static bool initialized;
     };
 
     // void init_windows();
