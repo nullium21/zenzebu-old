@@ -3,14 +3,13 @@
 #include "zz/log.h"
 #include "zz/window.h"
 
-using namespace zz::ecs;
-using namespace zz::log;
+using namespace zz;
 
-using zz::window;
-using zz::windowing;
+window::window(string t, unsigned int w, unsigned int h, bool vs)
+    : title(t), width(w), height(h), vsync(vs) {}
 
 window::~window() {
-    if (initialized) glfwDestroyWindow(wnd);
+    if (wnd != nullptr) glfwDestroyWindow(wnd);
 }
 
 void window::init() {
@@ -23,14 +22,32 @@ void window::init() {
     glfwMakeContextCurrent(wnd);
     glfwSetWindowUserPointer(wnd, this);
 
-    if (vsync)
-        glfwSwapInterval(1);
+    glfwSwapInterval(vsync ? 1 : 0);
 
     ZZ_CORE_INFO("window '{0}' initialized", title);
 }
 
+void window::update() {
+    glfwMakeContextCurrent(wnd);
+
+    if (old_title != title)
+        glfwSetWindowTitle(wnd, title.c_str());
+
+    if (width != old_width || height != old_height)
+        glfwSetWindowSize(wnd, width, height);
+
+    if (vsync != old_vsync)
+        glfwSwapInterval(vsync ? 1 : 0);
+
+    old_title = title;
+    old_width = width; old_height = height;
+    old_vsync = vsync;
+
+    glfwSwapBuffers(wnd);
+}
+
 bool windowing::init() {
-    if (!initialized) {
+    if (!windowing::initialized) {
         int success = glfwInit();
 
         if (!success) {
@@ -41,7 +58,7 @@ bool windowing::init() {
         initialized = true;
     }
 
-    auto view = zz::ecs::ecs::entt()->view<window>();
+    auto view = ecs::entt()->view<window>();
 
     view.each([](window &wnd) {
         wnd.init();
@@ -50,9 +67,23 @@ bool windowing::init() {
     return true;
 }
 
+bool windowing::update() {
+    if (!initialized && !init()) // init() will invoke only if !initialized
+        return false;
+
+    auto view = ecs::entt()->view<window>();
+    view.each([](window &wnd) {
+        wnd.update();
+    });
+
+    return true;
+}
+
 bool windowing::deinit() {
     if (initialized) {
-        ecs::ecs::entt()->clear<window>(); // lets hope this'll invoke the destructor
+        ecs::entt()->clear<window>(); // lets hope this'll invoke the destructor
+
+        glfwTerminate();
 
         initialized = false;
     }
