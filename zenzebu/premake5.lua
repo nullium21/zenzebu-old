@@ -59,6 +59,7 @@ project 'zenzebu-glfw'
         }
 
         defines { '_GLFW_X11' }
+        links { 'X11', 'pthread' }
 inc_dir.glfw = '%{wks.location}/zenzebu/glfw/include'
 
 project 'zenzebu'
