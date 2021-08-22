@@ -81,6 +81,7 @@ bool windowing::init() {
             return false;
         }
         
+        glfwSetErrorCallback(on_glfw_error);
         // initialized = true;
     // }
 
@@ -125,4 +126,8 @@ bool windowing::deinit() {
     // }
 
     return true;
+}
+
+void windowing::on_glfw_error(int err, const char *msg) {
+    ZZ_CORE_ERROR("GLFW error {0}: {1}", err, msg);
 }

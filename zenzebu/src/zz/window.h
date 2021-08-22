@@ -47,6 +47,9 @@ namespace zz {
 
         static bool deinit();
 
+    private:
+        static void on_glfw_error(int, const char *);
+
         // static bool initialized;
     };
 
