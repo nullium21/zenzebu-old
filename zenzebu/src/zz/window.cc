@@ -24,6 +24,8 @@ void window::init() {
 
     glfwSwapInterval(vsync ? 1 : 0);
 
+    glfwSetWindowSizeCallback(wnd, glfw_on_resize);
+
     ZZ_CORE_INFO("window '{0}' initialized", title);
 }
 
@@ -44,6 +46,19 @@ void window::update() {
     old_vsync = vsync;
 
     glfwSwapBuffers(wnd);
+}
+
+void window::set_resize_callback(resize_callback cb) {
+    this->on_resize = cb;
+}
+
+void window::glfw_on_resize(GLFWwindow *wnd, int w, int h) {
+    window *self = (window *) glfwGetWindowUserPointer(wnd);
+
+    self->width = w;
+    self->height = h;
+
+    self->on_resize(self, w, h);
 }
 
 bool windowing::init() {

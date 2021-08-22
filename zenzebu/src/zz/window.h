@@ -9,6 +9,8 @@ using std::string;
 namespace zz {
     class window {
     public:
+        using resize_callback = std::function<void(window *, unsigned int, unsigned int)>;
+
         window(string, unsigned int, unsigned int, bool);
         ~window();
 
@@ -19,6 +21,8 @@ namespace zz {
         unsigned int width;
         unsigned int height;
         bool vsync;
+
+        void set_resize_callback(resize_callback);
     private:
         GLFWwindow *wnd = nullptr;
 
@@ -26,6 +30,10 @@ namespace zz {
         unsigned int old_width;
         unsigned int old_height;
         bool old_vsync;
+
+        resize_callback on_resize;
+
+        static void glfw_on_resize(GLFWwindow *, int, int);
     };
 
     class windowing {
