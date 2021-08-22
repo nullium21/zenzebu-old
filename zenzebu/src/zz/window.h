@@ -23,6 +23,8 @@ namespace zz {
         bool vsync;
 
         void set_resize_callback(resize_callback);
+
+        bool should_close();
     private:
         GLFWwindow *wnd = nullptr;
 

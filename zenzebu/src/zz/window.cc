@@ -61,6 +61,10 @@ void window::glfw_on_resize(GLFWwindow *wnd, int w, int h) {
     self->on_resize(self, w, h);
 }
 
+bool window::should_close() {
+    return glfwWindowShouldClose(wnd);
+}
+
 bool windowing::init() {
     // if (!initialized) {
         int success = glfwInit();
@@ -83,15 +87,24 @@ bool windowing::init() {
 }
 
 bool windowing::update() {
-    // if (!initialized && !init()) // init() will invoke only if !initialized
-    //     return false;
-
     auto view = ecs::entt()->view<window>();
-    view.each([](window &wnd) {
-        wnd.update();
+
+    bool any_updated = false;
+
+    view.each([&any_updated](entity e, window &wnd) {
+        if (!wnd.should_close()) {
+            ZZ_CORE_INFO("updating window '{0}'", wnd.title);
+            wnd.update();
+            any_updated = true;
+        } else {
+            ZZ_CORE_INFO("removing window '{0}'", wnd.title);
+            ecs::entt()->remove<window>(e);
+        }
     });
 
-    return true;
+    glfwPollEvents();
+
+    return any_updated;
 }
 
 bool windowing::deinit() {
