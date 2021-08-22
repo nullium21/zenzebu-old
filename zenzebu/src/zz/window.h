@@ -16,6 +16,7 @@ namespace zz {
 
         void init();
         void update();
+        void close();
 
         string title;
         unsigned int width;

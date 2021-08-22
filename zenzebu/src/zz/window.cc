@@ -9,7 +9,7 @@ window::window(string t, unsigned int w, unsigned int h, bool vs)
     : title(t), width(w), height(h), vsync(vs) {}
 
 window::~window() {
-    if (wnd != nullptr) glfwDestroyWindow(wnd);
+    close();
 }
 
 void window::init() {
@@ -46,6 +46,13 @@ void window::update() {
     old_vsync = vsync;
 
     glfwSwapBuffers(wnd);
+}
+
+void window::close() {
+    if (wnd != nullptr) {
+        glfwDestroyWindow(wnd);
+        wnd = nullptr;
+    }
 }
 
 void window::set_resize_callback(resize_callback cb) {
@@ -98,6 +105,7 @@ bool windowing::update() {
             any_updated = true;
         } else {
             ZZ_CORE_INFO("removing window '{0}'", wnd.title);
+            wnd.close();
             ecs::entt()->remove<window>(e);
         }
     });
