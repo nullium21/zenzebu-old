@@ -24,7 +24,7 @@ public:
 
         windowing::init();
 
-        windowing::update();
+        while (windowing::update());
 
         windowing::deinit();
     }
