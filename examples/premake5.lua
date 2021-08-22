@@ -17,7 +17,7 @@ project 'ex.logging'
     }
 
     includedirs {
-        '%{wks.location}/zenzebu/src'
+        '%{inc_dir.zz}'
     }
 
     links { 'zenzebu' }
@@ -50,8 +50,8 @@ project 'ex.ecs'
     }
 
     includedirs {
-        '%{wks.location}/zenzebu/src',
-        '%{wks.location}/zenzebu/entt/single_include'
+        '%{inc_dir.zz}',
+        '%{inc_dir.entt}'
     }
 
     links { 'zenzebu' }
@@ -84,8 +84,8 @@ project 'ex.nativescript'
     }
 
     includedirs {
-        '%{wks.location}/zenzebu/src',
-        '%{wks.location}/zenzebu/entt/single_include'
+        '%{inc_dir.zz}',
+        '%{inc_dir.entt}'
     }
 
     links { 'zenzebu' }
