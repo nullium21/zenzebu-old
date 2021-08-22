@@ -23,22 +23,27 @@ public:
             const auto e = ecs::entt()->create();
 
             std::stringstream sname;
-            sname << "native script for entity " << i;
+            sname << "entity " << i;
             std::string name = sname.str();
 
-            script_callback on_start = [name](auto _) {
+            native::script_callback on_start = [name](auto _) {
                 ZZ_INFO("script '{0}' on_start", name);
             };
 
-            script_callback on_update = [name](auto _) {
+            native::script_callback on_update = [name](auto _) {
                 ZZ_INFO("script '{0}' on_update", name);
             };
 
-            ecs::entt()->emplace<native_script>(e, name, on_start, on_update);
+            if (i % 2 == 0)
+                ecs::entt()->emplace<native::on_init_script>(e, on_start);
+
+            ecs::entt()->emplace<native::on_update_script>(e, on_update);
         }
 
+        zz::scripting::update(update_stage::us_oninit);
+
         for (auto i = 0u; i < 10u; i++) {
-            zz::scripting::update();
+            zz::scripting::update(update_stage::us_onupdate);
         }
     }
 };

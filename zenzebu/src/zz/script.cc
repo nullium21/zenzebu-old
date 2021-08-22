@@ -5,12 +5,18 @@
 using namespace zz::scripting;
 using namespace zz::ecs;
 
-void zz::scripting::update() {
-    auto native = zz::ecs::ecs::entt()->view<const native_script>();
+#define NATIVE_UPDATE_STAGE(S) if (stage == update_stage::us_on##S) { \
+    auto view = zz::ecs::ecs::entt()->view<const native::on_##S##_script>(); \
+    view.each([](const auto entity, const auto &script) { \
+        script.on_##S(entity); \
+    }); \
+}
 
-    native.each([](const auto entity, const auto &script) {
-        ZZ_CORE_INFO("updating native script '{0}'", script.name);
+void update_native(update_stage stage) {
+    NATIVE_UPDATE_STAGE(init);
+    NATIVE_UPDATE_STAGE(update);
+}
 
-        script.on_update(entity);
-    });
+void zz::scripting::update(update_stage stage) {
+    update_native(stage);
 }

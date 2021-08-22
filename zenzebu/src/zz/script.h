@@ -3,14 +3,22 @@
 #include "zz/ecs.h"
 
 namespace zz::scripting {
-    using script_callback = std::function<void(entt::entity)>;
-
-    struct native_script {
-        std::string name;
-
-        script_callback on_start;
-        script_callback on_update;
+    enum update_stage {
+        us_oninit,
+        us_onupdate
     };
 
-    void update();
+    namespace native {
+        using script_callback = std::function<void(entt::entity)>;
+
+        struct on_init_script {
+            script_callback on_init;
+        };
+
+        struct on_update_script {
+            script_callback on_update;
+        };
+    }
+
+    void update(update_stage);
 }
