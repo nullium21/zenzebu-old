@@ -6,7 +6,7 @@
 
 using std::shared_ptr;
 
-namespace zz::ecs {
+namespace zz {
 
     using entt::registry;
     using entt::entity;

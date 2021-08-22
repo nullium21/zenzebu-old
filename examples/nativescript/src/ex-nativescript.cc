@@ -6,10 +6,9 @@
 #include "zz/ecs.h"
 #include "zz/script.h"
 
-using namespace zz::log;
 using namespace zz::scripting;
 using namespace zz::app;
-using namespace zz::ecs;
+using namespace zz;
 
 class ns_app: public application {
 public:

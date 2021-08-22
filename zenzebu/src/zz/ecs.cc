@@ -1,7 +1,7 @@
 #include "zz/ecs.h"
 #include "zz/log.h"
 
-using namespace zz::ecs;
+using namespace zz;
 using std::make_shared;
 
 shared_ptr<registry> ecs::entt_reg;
