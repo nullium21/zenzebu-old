@@ -9,6 +9,9 @@ using namespace zz::app;
 class test_layer: public layer {
     string name() override { return "test layer"; }
 
+    void on_update(layer_stack &st) override {
+        ZZ_INFO("updating test layer");
+    }
 };
 
 class layers_app: public application {
@@ -21,6 +24,9 @@ public:
         auto &ls = ecs::entt()->emplace<layer_stack>(ent);
 
         uint id = ls.push(new test_layer());
+
+        for (auto i = 0u; i < 10u; i++)
+            layering::update_all();
     }
 };
 
