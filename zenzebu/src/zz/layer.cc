@@ -28,9 +28,9 @@ layer_stack::~layer_stack() {
         delete ptr;
 }
 
-uint layer_stack::push(layer l) {
+uint layer_stack::push(layer *l) {
     uint idx = layers.size();
-    layers.push_back(&l);
+    layers.push_back(l);
 
     uint id = next_id++;
 

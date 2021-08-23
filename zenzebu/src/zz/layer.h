@@ -26,7 +26,7 @@ namespace zz {
     struct layer_stack {
         ~layer_stack();
 
-        uint push(layer);
+        uint push(layer *);
 
         layer *pop(uint);
         layer *pop(string);
