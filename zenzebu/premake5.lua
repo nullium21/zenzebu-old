@@ -90,6 +90,8 @@ project 'zenzebu'
 
     links { 'zenzebu-lua', 'zenzebu-glfw' }
 
+    defines { 'ZZ_USEPCH' }
+
     filter "system:linux"
         defines { "ZZ_LINUX", "ZZ_SHAREDLIB" }
 

@@ -1,5 +1,12 @@
 #pragma once
 
+#ifndef ZZ_USEPCH
+#include <string>
+#include <memory>
+#include <unordered_map>
+#include <vector>
+#endif
+
 using std::string;
 using std::shared_ptr;
 using std::unordered_map;

@@ -1,3 +1,7 @@
+#ifndef ZZ_USEPCH
+#include "zz/log.h"
+#endif
+
 #include "zz/ecs.h"
 
 using namespace zz;

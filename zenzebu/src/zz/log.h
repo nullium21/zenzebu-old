@@ -1,5 +1,9 @@
 #pragma once
 
+#ifndef ZZ_USEPCH
+#include <memory>
+#endif
+
 #include "spdlog/spdlog.h"
 
 // #include <memory>

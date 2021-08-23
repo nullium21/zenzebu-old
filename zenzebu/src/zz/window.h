@@ -1,5 +1,10 @@
 #pragma once
 
+#ifndef ZZ_USEPCH
+#include <string>
+#include <functional>
+#endif
+
 extern "C" {
 #include "GLFW/glfw3.h"
 }

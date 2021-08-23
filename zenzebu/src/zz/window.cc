@@ -1,3 +1,7 @@
+#ifndef ZZ_USEPCH
+#include "zz/log.h"
+#endif
+
 #include "GLFW/glfw3.h"
 #include "zz/ecs.h"
 #include "zz/window.h"
