@@ -49,9 +49,6 @@ namespace zz {
 
     private:
         static void on_glfw_error(int, const char *);
-
-        // static bool initialized;
     };
 
-    // void init_windows();
 }

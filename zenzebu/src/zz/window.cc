@@ -73,17 +73,14 @@ bool window::should_close() {
 }
 
 bool windowing::init() {
-    // if (!initialized) {
-        int success = glfwInit();
+    int success = glfwInit();
 
-        if (!success) {
-            ZZ_CORE_ERROR("failed to initialize GLFW");
-            return false;
-        }
+    if (!success) {
+        ZZ_CORE_ERROR("failed to initialize GLFW");
+        return false;
+    }
         
-        glfwSetErrorCallback(on_glfw_error);
-        // initialized = true;
-    // }
+    glfwSetErrorCallback(on_glfw_error);
 
     auto view = ecs::entt()->view<window>();
 
@@ -100,14 +97,13 @@ bool windowing::update() {
     bool any_updated = false;
 
     view.each([&any_updated](entity e, window &wnd) {
-        if (!wnd.should_close()) {
-            ZZ_CORE_INFO("updating window '{0}'", wnd.title);
-            wnd.update();
-            any_updated = true;
-        } else {
-            ZZ_CORE_INFO("removing window '{0}'", wnd.title);
+        if (wnd.should_close()) {
+            ZZ_CORE_INFO("closing window '{0}'", wnd.title);
             wnd.close();
             ecs::entt()->remove<window>(e);
+        } else {
+            wnd.update();
+            any_updated = true;
         }
     });
 
@@ -117,13 +113,9 @@ bool windowing::update() {
 }
 
 bool windowing::deinit() {
-    // if (initialized) {
-        ecs::entt()->clear<window>(); // lets hope this'll invoke the destructor
-
-        glfwTerminate();
-
-        // initialized = false;
-    // }
+    ecs::entt()->clear<window>(); // lets hope this'll invoke the destructor
+    
+    glfwTerminate();
 
     return true;
 }
