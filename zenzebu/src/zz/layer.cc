@@ -2,6 +2,7 @@
 #include "zz/log.h"
 #endif
 
+#include "zz/ecs.h"
 #include "zz/layer.h"
 
 using namespace zz;
@@ -19,7 +20,7 @@ void layer::on_remove(layer_stack &stack) {
     ZZ_CORE_INFO("removed layer {0} from stack", name());
 }
 
-void layer::on_update() {
+void layer::on_update(layer_stack &stack) {
 
 }
 
@@ -77,4 +78,16 @@ bool layer_stack::has(string lname) {
             return true;
     }
     return false;
+}
+
+void layer_stack::update() {
+    for (layer *l : layers)
+        l->on_update(*this);
+}
+
+void layering::update_all() {
+    auto view = ecs::entt()->view<layer_stack>();
+    view.each([](auto &stack) {
+        stack.update();
+    });
 }

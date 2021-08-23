@@ -20,7 +20,7 @@ namespace zz {
 
         virtual void on_add(layer_stack &);
         virtual void on_remove(layer_stack &);
-        virtual void on_update();
+        virtual void on_update(layer_stack &);
     };
 
     struct layer_stack {
@@ -32,9 +32,16 @@ namespace zz {
         layer *pop(string);
 
         bool has(string);
+
+        void update();
     private:
         vector<layer *> layers{};
         uint next_id = 0;
         unordered_map<uint, uint> id_to_index{};
+    };
+
+    class layering {
+    public:
+        static void update_all();
     };
 }
