@@ -23,4 +23,12 @@ namespace zz {
     private:
         static shared_ptr<registry> entt_reg;
     };
+
+    struct parent {
+        entity parent;
+    };
+
+    struct children {
+        vector<entity> children;
+    };
 }
