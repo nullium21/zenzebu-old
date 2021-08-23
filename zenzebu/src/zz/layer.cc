@@ -36,6 +36,8 @@ uint layer_stack::push(layer *l) {
 
     id_to_index[id] = idx;
 
+    l->on_add(*this);
+
     return id;
 }
 
@@ -49,6 +51,8 @@ layer *layer_stack::pop(uint id) {
     layers.erase(layers.begin() + idx); // remove layer by index
     id_to_index.erase(id);
 
+    ret->on_remove(*this);
+
     return ret;
 }
 
@@ -58,6 +62,7 @@ layer *layer_stack::pop(string lname) {
 
         if (ptr->name() == lname) {
             it = layers.erase(it);
+            ptr->on_remove(*this);
             return ptr;
         }
     }
