@@ -1,6 +1,5 @@
 #include "GLFW/glfw3.h"
 #include "zz/ecs.h"
-#include "zz/log.h"
 #include "zz/window.h"
 
 using namespace zz;

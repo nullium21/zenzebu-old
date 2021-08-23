@@ -1,5 +1,4 @@
 #include "zz/ecs.h"
-#include "zz/log.h"
 #include "zz/script.h"
 
 using namespace zz::scripting;

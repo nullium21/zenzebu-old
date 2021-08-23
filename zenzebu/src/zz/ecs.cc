@@ -1,5 +1,4 @@
 #include "zz/ecs.h"
-#include "zz/log.h"
 
 using namespace zz;
 using std::make_shared;

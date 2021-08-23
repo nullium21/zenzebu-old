@@ -1,5 +1,3 @@
-#include "zz/log.h"
-
 #include "spdlog/sinks/stdout_color_sinks.h"
 
 namespace zz {
