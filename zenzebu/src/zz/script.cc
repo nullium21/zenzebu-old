@@ -3,10 +3,10 @@
 #include "zz/script.h"
 
 using namespace zz::scripting;
-using namespace zz::ecs;
+using namespace zz;
 
 #define NATIVE_UPDATE_STAGE(S) if (stage == update_stage::us_on##S) { \
-    auto view = zz::ecs::ecs::entt()->view<const native::on_##S##_script>(); \
+    auto view = ecs::entt()->view<const native::on_##S##_script>(); \
     view.each([](const auto entity, const auto &script) { \
         script.on_##S(entity); \
     }); \

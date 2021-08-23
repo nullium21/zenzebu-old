@@ -2,9 +2,8 @@
 #include "zz/log.h"
 #include "zz/ecs.h"
 
-using namespace zz::log;
+using namespace zz;
 using namespace zz::app;
-using namespace zz::ecs;
 
 struct dbg_out {
     std::string text;

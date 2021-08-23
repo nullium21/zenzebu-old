@@ -7,6 +7,9 @@ namespace zz::app {
         virtual ~application();
 
         virtual void run();
+
+    protected:
+        bool running = true;
     };
 
     application *create_app();

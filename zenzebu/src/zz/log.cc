@@ -2,7 +2,7 @@
 
 #include "spdlog/sinks/stdout_color_sinks.h"
 
-namespace zz::log {
+namespace zz {
 
     shared_ptr<spdlog::logger> log::clog;
     shared_ptr<spdlog::logger> log::mlog;

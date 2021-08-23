@@ -1,7 +1,7 @@
 #include "zz/app.h"
 #include "zz/log.h"
 
-using namespace zz::log;
+using namespace zz;
 using namespace zz::app;
 
 class log_app: public application {

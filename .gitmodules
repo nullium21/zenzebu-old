@@ -12,3 +12,7 @@
 [submodule "premake/export-compile-commands"]
 	path = premake/export-compile-commands
 	url = https://github.com/tarruda/premake-export-compile-commands
+[submodule "zenzebu/glfw"]
+	path = zenzebu/glfw
+	url = https://github.com/glfw/glfw
+	branch = 3.3-stable
