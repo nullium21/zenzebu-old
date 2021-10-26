@@ -16,3 +16,6 @@
 	path = zenzebu/glfw
 	url = https://github.com/glfw/glfw
 	branch = 3.3-stable
+[submodule "zenzebu/glm"]
+	path = zenzebu/glm
+	url = https://github.com/g-truc/glm
