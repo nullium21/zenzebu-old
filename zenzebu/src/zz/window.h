@@ -9,6 +9,8 @@ extern "C" {
 #include "GLFW/glfw3.h"
 }
 
+#include "rendering.h"
+
 using std::string;
 
 namespace zz {
@@ -42,6 +44,8 @@ namespace zz {
         resize_callback on_resize;
 
         static void glfw_on_resize(GLFWwindow *, int, int);
+
+        friend class rendering;
     };
 
     class windowing {
