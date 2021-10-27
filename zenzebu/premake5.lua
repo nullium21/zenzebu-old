@@ -62,6 +62,21 @@ project 'zenzebu-glfw'
         links { 'X11', 'pthread' }
 inc_dir.glfw = '%{wks.location}/zenzebu/glfw/include'
 
+project 'zenzebu-glm'
+    kind 'sharedlib'
+
+    language 'c++'
+    cppdialect 'c++11'
+
+    targetdir (tgt_dir)
+    objdir    (obj_dir)
+
+    files {
+        'glm/**.hpp'
+    }
+
+inc_dir.glm = '%{wks.location}/zenzebu/glm'
+
 project 'zenzebu'
     kind 'sharedlib'
 
@@ -85,6 +100,7 @@ project 'zenzebu'
         '%{prj.location}',
         '%{inc_dir.entt}',
         '%{inc_dir.glfw}',
+        '%{inc_dir.glm}',
         '%{inc_dir.zz}'
     }
 
