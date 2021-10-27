@@ -77,6 +77,23 @@ project 'zenzebu-glm'
 
 inc_dir.glm = '%{wks.location}/zenzebu/glm'
 
+project 'zenzebu-glad'
+    kind 'sharedlib'
+
+    language 'c++'
+    cppdialect 'c++11'
+
+    targetdir (tgt_dir)
+    objdir    (obj_dir)
+
+    files {
+        'glad/include/**.h',
+        'glad/src/**.c'
+    }
+
+    includedirs { 'glad/include' }
+inc_dir.glad = '%{wks.location}/zenzebu/glad/include'
+
 project 'zenzebu'
     kind 'sharedlib'
 
@@ -100,6 +117,7 @@ project 'zenzebu'
         '%{prj.location}',
         '%{inc_dir.entt}',
         '%{inc_dir.glfw}',
+        '%{inc_dir.glad}',
         '%{inc_dir.glm}',
         '%{inc_dir.zz}'
     }
