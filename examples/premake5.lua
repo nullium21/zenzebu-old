@@ -40,7 +40,8 @@ example_project('nativescript', {
 example_project('window', {
     '%{inc_dir.zz}',
     '%{inc_dir.entt}',
-    '%{inc_dir.glfw}'
+    '%{inc_dir.glfw}',
+    '%{inc_dir.glm}'
 })
 
 example_project('layers', {
