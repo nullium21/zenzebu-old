@@ -26,6 +26,7 @@ namespace zz {
             enum {
                 draw_static, draw_dynamic
             } type;
+            bool should_create_buffers_on_init();
         };
     }
 }

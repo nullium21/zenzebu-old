@@ -50,3 +50,13 @@ float *mesh::vert_buffer_all() {
 void mesh::invalidate() {
     vao = vbo = -1;
 }
+
+bool mesh::should_create_buffers_on_init() {
+    switch (type) {
+        case mesh::draw_static:
+        case mesh::draw_dynamic:
+            return true;
+
+        default: return false;
+    }
+}
