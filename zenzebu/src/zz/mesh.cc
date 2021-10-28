@@ -7,34 +7,6 @@
 using namespace zz;
 using namespace zz::component;
 
-size_t mesh_buffer::num_faces() {
-    return num_tris() / 3;
-}
-
-size_t mesh_buffer::num_tris() {
-    return idxs.size() / 3;
-}
-
-float *mesh_buffer::buffer() {
-    float *buf = new float[idxs.size()];
-
-    for (size_t j = 0; j < idxs.size(); ++j) {
-        buf[j] = verts[idxs[j]];
-    }
-
-    return buf;
-}
-
-glm::vec3 mesh_buffer::operator[](size_t i) {
-    auto idxs_iter = idxs.begin() + (i * 3);
-
-    return {
-        verts[idxs_iter[0]],
-        verts[idxs_iter[1]],
-        verts[idxs_iter[2]]
-    };
-}
-
 mesh::mesh(std::vector<glm::vec3> verts) {
     std::unordered_map<glm::vec3, size_t> idxs = {};
     for (int i = 0; i < verts.size(); ++i) {
@@ -48,23 +20,31 @@ mesh::mesh(std::vector<glm::vec3> verts) {
     }
 }
 
-mesh::mesh(mesh_buffer buf) {
-    indices = buf.idxs;
-    for (int i = 0; i < buf.num_tris(); i++) {
-        verts.push_back(buf[i]);
+float *mesh::vert_buffer() {
+    float *buf = new float[verts.size() * 3];
+    for (size_t i = 0; i < verts.size(); i++) {
+        buf[i*3+0] = verts[i].x;
+        buf[i*3+1] = verts[i].y;
+        buf[i*3+2] = verts[i].z;
     }
+    return buf;
 }
 
-mesh_buffer mesh::buffer() {
-    std::vector<float> floats {};
+size_t *mesh::idx_buffer() {
+    return indices.data();
+}
 
-    for (glm::vec3 vert : verts) {
-        floats.push_back(vert.x);
-        floats.push_back(vert.y);
-        floats.push_back(vert.z);
+float *mesh::vert_buffer_all() {
+    float *buf = new float[indices.size() * 3];
+    for (size_t i = 0; i < indices.size(); i++) {
+        glm::vec3 vert = verts[indices[i]];
+        buf[i*3+0] = vert.x;
+        buf[i*3+1] = vert.y;
+        buf[i*3+2] = vert.z;
     }
+    return buf;
+}
 
-    return {
-        floats, indices
-    };
+void mesh::invalidate() {
+    vao = vbo = -1;
 }

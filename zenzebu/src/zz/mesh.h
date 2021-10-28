@@ -8,27 +8,20 @@
 #include "glm/glm.hpp"
 
 namespace zz {
-    struct mesh_buffer {
-        std::vector<float> verts {};
-        std::vector<size_t> idxs {};
-        size_t num_faces();
-        size_t num_tris ();
-        float* buffer   ();
-
-        glm::vec3 operator[](size_t);
-    };
-
     namespace component {
         struct mesh {
         public:
             mesh(std::vector<glm::vec3>);
-            mesh(mesh_buffer);
             ~mesh();
 
-            mesh_buffer buffer();
-        private:
             std::vector<glm::vec3> verts {};
             std::vector<size_t> indices {};
+            float *vert_buffer();
+            size_t *idx_buffer();
+            float *vert_buffer_all();
+
+            uint vao, vbo;
+            void invalidate();
         };
     }
 }
