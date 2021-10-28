@@ -97,7 +97,7 @@ inc_dir.glad = '%{wks.location}/zenzebu/glad/include'
 project 'zenzebu'
     kind 'sharedlib'
 
-    dependson { 'zenzebu-lua', 'zenzebu-glfw' }
+    dependson { 'zenzebu-lua', 'zenzebu-glfw', 'zenzebu-glad', 'zenzebu-glm' }
 
     language 'c++'
     cppdialect 'c++17'
@@ -124,7 +124,7 @@ project 'zenzebu'
 
     links { 'zenzebu-lua', 'zenzebu-glfw', 'zenzebu-glad' }
 
-    defines { 'ZZ_USEPCH' }
+    -- defines { 'ZZ_USEPCH' }
 
     filter "system:linux"
         defines { "ZZ_LINUX", "ZZ_SHAREDLIB" }
