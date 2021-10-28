@@ -23,6 +23,11 @@ void renderer::init(const entity e, GLFWwindow *wnd) {
     glClear(GL_COLOR_BUFFER_BIT);
 
     window *w = static_cast<window *>(glfwGetWindowUserPointer(wnd));
+
+    auto msh = ecs::entt()->try_get<component::mesh>(e);
+    if (msh != nullptr && msh->vbo == -1 && msh->should_create_buffers_on_init()) {
+        glGenBuffers(1, &msh->vbo);
+    }
 }
 
 void renderer::update(const entity e, GLFWwindow *wnd) {
