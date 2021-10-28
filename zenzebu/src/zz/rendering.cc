@@ -7,6 +7,38 @@
 
 using namespace zz;
 
+enum rendering_stage {
+    rs_init, rs_render
+};
+
+void setup_buffers_if_required(component::mesh *msh, rendering_stage stage) {
+    bool should_set_data =
+            (stage == rs_init   &&  msh->should_create_buffers_on_init())
+        ||  (stage == rs_render && !msh->should_create_buffers_on_init());
+
+    if (should_set_data) {
+        glGenBuffers(1, &msh->vbo);
+
+        GLenum draw_type;
+        switch (msh->type) {
+            case component::mesh::draw_dynamic: draw_type = GL_DYNAMIC_DRAW;
+            case component::mesh::draw_static : draw_type = GL_STATIC_DRAW;
+
+            default: {
+                log::core_logger()->error("unsupported draw type for mesh: {}", msh->type);
+                return;
+            }
+        }
+
+        glBindBuffer(GL_ARRAY_BUFFER, msh->vbo);
+
+        float *verts = msh->vert_buffer_all();
+        size_t verts_size = msh->indices.size() * 3 * sizeof(float);
+
+        glBufferData(GL_ARRAY_BUFFER, verts_size, verts, draw_type);
+    }
+}
+
 renderer::renderer() {
 
 }
@@ -16,28 +48,8 @@ renderer::~renderer() {
 }
 
 void renderer::render(const entity e, component::mesh *msh, GLFWwindow *wnd) {
-    if (msh->vbo == -1) {
-        glGenBuffers(1, &msh->vbo);
-    }
-
-    GLenum draw_type;
-    switch (msh->type) {
-        case component::mesh::draw_dynamic: draw_type = GL_DYNAMIC_DRAW;
-        case component::mesh::draw_static : draw_type = GL_STATIC_DRAW;
-
-        default: {
-            log::core_logger()->error("unsupported draw type for mesh: {}", msh->type);
-            return;
-        }
-    }
-
+    setup_buffers_if_required(msh, rs_render);
     glBindBuffer(GL_ARRAY_BUFFER, msh->vbo);
-    if (msh->type != component::mesh::draw_static) { // in static meshes, data is already uploaded?
-        float *verts = msh->vert_buffer_all();
-        size_t verts_size = msh->indices.size() * 3 * sizeof(float);
-
-        glBufferData(GL_ARRAY_BUFFER, verts_size, verts, draw_type);
-    }
 }
 
 void renderer::init(const entity e, GLFWwindow *wnd) {
@@ -48,8 +60,8 @@ void renderer::init(const entity e, GLFWwindow *wnd) {
     window *w = static_cast<window *>(glfwGetWindowUserPointer(wnd));
 
     auto msh = ecs::entt()->try_get<component::mesh>(e);
-    if (msh != nullptr && msh->vbo == -1 && msh->should_create_buffers_on_init()) {
-        glGenBuffers(1, &msh->vbo);
+    if (msh != nullptr) {
+        setup_buffers_if_required(msh, rs_init);
     }
 }
 
