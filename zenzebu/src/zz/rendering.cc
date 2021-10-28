@@ -1,7 +1,9 @@
 #include "rendering.h"
+#include "glad/glad.h"
 #include "GLFW/glfw3.h"
 #include "window.h"
 #include "ecs.h"
+#include "log.h"
 
 using namespace zz;
 
@@ -13,8 +15,29 @@ renderer::~renderer() {
 
 }
 
-void renderer::render(component::mesh *msh, GLFWwindow *wnd) {
+void renderer::render(const entity e, component::mesh *msh, GLFWwindow *wnd) {
+    if (msh->vbo == -1) {
+        glGenBuffers(1, &msh->vbo);
+    }
 
+    GLenum draw_type;
+    switch (msh->type) {
+        case component::mesh::draw_dynamic: draw_type = GL_DYNAMIC_DRAW;
+        case component::mesh::draw_static : draw_type = GL_STATIC_DRAW;
+
+        default: {
+            log::core_logger()->error("unsupported draw type for mesh: {}", msh->type);
+            return;
+        }
+    }
+
+    glBindBuffer(GL_ARRAY_BUFFER, msh->vbo);
+    if (msh->type != component::mesh::draw_static) { // in static meshes, data is already uploaded?
+        float *verts = msh->vert_buffer_all();
+        size_t verts_size = msh->indices.size() * 3 * sizeof(float);
+
+        glBufferData(GL_ARRAY_BUFFER, verts_size, verts, draw_type);
+    }
 }
 
 void renderer::init(const entity e, GLFWwindow *wnd) {
