@@ -18,6 +18,8 @@ mesh::mesh(std::vector<glm::vec3> verts) {
             indices.push_back(verts.size()-1);
         }
     }
+
+    invalidate();
 }
 
 float *mesh::vert_buffer() {

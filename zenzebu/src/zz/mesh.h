@@ -22,6 +22,10 @@ namespace zz {
 
             uint vao, vbo;
             void invalidate();
+
+            enum {
+                draw_static, draw_dynamic
+            } type;
         };
     }
 }
