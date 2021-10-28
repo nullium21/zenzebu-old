@@ -37,7 +37,7 @@ void renderer::update(const entity e, GLFWwindow *wnd) {
 
             auto mesh = reg->try_get<component::mesh>(child);
 
-            if (mesh != nullptr) render(mesh, wnd);
+            if (mesh != nullptr) render(child, mesh, wnd);
         }
     }
 }

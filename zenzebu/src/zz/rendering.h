@@ -1,11 +1,12 @@
 #pragma once
 
-#include "zz/mesh.h"
+#define GLFW_INCLUDE_NONE
 extern "C" {
 #include "GLFW/glfw3.h"
 }
 
 #include "ecs.h"
+#include "mesh.h"
 
 namespace zz {
     class rendering {
@@ -22,7 +23,7 @@ namespace zz {
 
         void init(const entity, GLFWwindow *);
         void update(const entity, GLFWwindow *);
-        void render(component::mesh *, GLFWwindow *);
+        void render(const entity, component::mesh *, GLFWwindow *);
     private:
         bool initialized = false;
     };
