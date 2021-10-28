@@ -122,7 +122,7 @@ project 'zenzebu'
         '%{inc_dir.zz}'
     }
 
-    links { 'zenzebu-lua', 'zenzebu-glfw' }
+    links { 'zenzebu-lua', 'zenzebu-glfw', 'zenzebu-glad' }
 
     defines { 'ZZ_USEPCH' }
 
