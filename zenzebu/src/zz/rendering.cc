@@ -76,8 +76,8 @@ void renderer::update(const entity e, GLFWwindow *wnd) {
             if (reg->try_get<component::parent>(child) == nullptr) continue;
 
             auto mesh = reg->try_get<component::mesh>(child);
-
             if (mesh != nullptr) render(child, mesh, wnd);
+            else update(child, wnd); // if it's not a mesh, recurse!
         }
     }
 }
