@@ -141,3 +141,10 @@ project 'zenzebu'
         files { "platform/linux/**.cc", "platform/linux/**.h" }
     filter "system:windows"
         files { "platform/windows/**.cc", "platform/linux/**.h" }
+
+inc_dir.all = {
+    inc_dir.zz,
+    inc_dir.entt,
+    inc_dir.glad, inc_dir.glfw, inc_dir.glm,
+    inc_dir.lua
+}

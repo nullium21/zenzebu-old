@@ -1,4 +1,4 @@
-function example_project(name, incdirs)
+function example_project(name)
     project('ex.' .. name)
     location(name .. '/')
     kind 'consoleapp'
@@ -8,7 +8,7 @@ function example_project(name, incdirs)
     targetdir(tgt_dir)
     objdir   (obj_dir)
     files { name .. '/src/**.cc' }
-    includedirs(incdirs)
+    includedirs(inc_dir.all)
     links { 'zenzebu' }
 
     filter "system:linux"
@@ -23,30 +23,14 @@ end
 
 group 'examples'
 
-example_project('logging', {
-    '%{inc_dir.zz}'
-})
+example_project 'logging'
 
-example_project('ecs', {
-    '%{inc_dir.zz}',
-    '%{inc_dir.entt}'
-})
+example_project 'ecs'
 
-example_project('nativescript', {
-    '%{inc_dir.zz}',
-    '%{inc_dir.entt}'
-})
+example_project 'nativescript'
 
-example_project('window', {
-    '%{inc_dir.zz}',
-    '%{inc_dir.entt}',
-    '%{inc_dir.glfw}',
-    '%{inc_dir.glm}'
-})
+example_project 'window'
 
-example_project('layers', {
-    '%{inc_dir.zz}',
-    '%{inc_dir.entt}'
-})
+example_project 'layers'
 
 group ''
