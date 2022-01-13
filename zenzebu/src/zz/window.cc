@@ -37,6 +37,10 @@ void window::init() {
     ZZ_CORE_INFO("window '{0}' initialized", title);
 }
 
+void window::use() {
+    glfwMakeContextCurrent(wnd);
+}
+
 void window::update() {
     glfwMakeContextCurrent(wnd);
 

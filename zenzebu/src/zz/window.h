@@ -31,6 +31,8 @@ namespace zz {
         void set_resize_callback(resize_callback);
 
         bool should_close();
+
+        void use();
     private:
         GLFWwindow *wnd = nullptr;
 
