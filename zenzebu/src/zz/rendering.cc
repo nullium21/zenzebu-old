@@ -63,9 +63,13 @@ void renderer::init(const entity e, GLFWwindow *wnd) {
     if (msh != nullptr) {
         setup_buffers_if_required(msh, rs_init);
     }
+
+    initialized = true;
 }
 
 void renderer::update(const entity e, GLFWwindow *wnd) {
+    if (!initialized) init(e, wnd);
+
     window *w = static_cast<window *>(glfwGetWindowUserPointer(wnd));
 
     std::shared_ptr<entt::registry> reg = ecs::entt();
