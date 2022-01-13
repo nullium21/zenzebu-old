@@ -9,8 +9,6 @@ extern "C" {
 #include "GLFW/glfw3.h"
 }
 
-#include "rendering.h"
-
 using std::string;
 
 namespace zz {
