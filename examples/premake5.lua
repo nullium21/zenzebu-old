@@ -9,7 +9,7 @@ function example_project(name)
     objdir   (obj_dir)
     files { name .. '/src/**.cc' }
     includedirs(inc_dir.all)
-    links { 'zenzebu' }
+    links { 'zenzebu', 'zenzebu-glad' }
 
     filter "system:linux"
         defines { "ZZ_LINUX" }
@@ -32,5 +32,7 @@ example_project 'nativescript'
 example_project 'window'
 
 example_project 'layers'
+
+example_project 'rendering'
 
 group ''
