@@ -104,7 +104,7 @@ bool windowing::init() {
     auto view = ecs::entt()->view<window>();
 
     view.each([](entity e, window &wnd) {
-        ZZ_CORE_INFO("Initing window of entity {}", e);
+        // ZZ_CORE_INFO("Initing window of entity {}", e);
         wnd.init();
     });
 
@@ -117,7 +117,7 @@ bool windowing::update() {
     bool any_updated = false;
 
     view.each([&any_updated](entity e, window &wnd) {
-        ZZ_CORE_INFO("Updating window of entity {}", e);
+        // ZZ_CORE_INFO("Updating window of entity {}", e);
 
         if (wnd.should_close()) {
             ZZ_CORE_INFO("closing window '{0}'", wnd.title);

@@ -63,9 +63,6 @@ class rendering_app: public application {
         glGetShaderiv(shvert, GL_COMPILE_STATUS, &isok);
         if (isok) glAttachShader(shprog, shvert);
         else {
-            err = glGetError();
-            ZZ_ERROR("{} NOERR={} IENUM={} IVAL={} IOP={} IFBOP={} IOOM={}", err, GL_NO_ERROR, GL_INVALID_ENUM, GL_INVALID_VALUE, GL_INVALID_OPERATION, GL_INVALID_FRAMEBUFFER_OPERATION, GL_OUT_OF_MEMORY);
-
             glGetShaderInfoLog(shvert, sizeof(info_log), nullptr, info_log);
             ZZ_ERROR("Vertex shader compilation failed: {}", info_log);
             // fprintf(stderr, "%s", info_log);
@@ -75,9 +72,6 @@ class rendering_app: public application {
         glGetShaderiv(shfrag, GL_COMPILE_STATUS, &isok);
         if (isok) glAttachShader(shprog, shfrag);
         else {
-            err = glGetError();
-            ZZ_ERROR("{} NOERR={} IENUM={} IVAL={} IOP={} IFBOP={} IOOM={}", err, GL_NO_ERROR, GL_INVALID_ENUM, GL_INVALID_VALUE, GL_INVALID_OPERATION, GL_INVALID_FRAMEBUFFER_OPERATION, GL_OUT_OF_MEMORY);
-
             glGetShaderInfoLog(shfrag, sizeof(info_log), nullptr, info_log);
             ZZ_ERROR("Fragment shader compilation failed: {}", info_log);
             // fprintf(stderr, "%s", info_log);
@@ -86,19 +80,21 @@ class rendering_app: public application {
         glLinkProgram(shprog);
         glGetProgramiv(shprog, GL_LINK_STATUS, &isok);
         if (!isok) {
-            err = glGetError();
-            ZZ_ERROR("{} NOERR={} IENUM={} IVAL={} IOP={} IFBOP={} IOOM={}", err, GL_NO_ERROR, GL_INVALID_ENUM, GL_INVALID_VALUE, GL_INVALID_OPERATION, GL_INVALID_FRAMEBUFFER_OPERATION, GL_OUT_OF_MEMORY);
-
-
             glGetProgramInfoLog(shprog, sizeof(info_log), nullptr, info_log);
             ZZ_ERROR("Shader program linkage failed: {}", info_log);
             // fprintf(stderr, "%s", info_log);
         }
 
-        float vert_data[3] = { 0, 0, 0 };                   // data for vertices: 3 floats for each (X Y Z)
+        float vert_data[9] = {                              // data for vertices: 3 floats for each (X Y Z)
+            -1., -1., 0.,
+             1., -1., 0.,
+             0.,  1., 0.,
+        };
 
-        GLuint vbo;
+        GLuint vbo, vao;
         glGenBuffers(1, &vbo);                              // generate a buffer for the data
+        glGenVertexArrays(1, &vao);
+        glBindVertexArray(vao);
 
         glBindBuffer(GL_ARRAY_BUFFER, vbo);                 // use the buffer as a vertex buffer (vertex array)
 
@@ -108,8 +104,6 @@ class rendering_app: public application {
                                                             // - the data itself
                                                             // - data type (will it be changed?)
 
-        glEnableVertexAttribArray(0);                       // enable attribute #0 for shader
-
         // glBindBuffer(GL_ARRAY_BUFFER, vbo);                 // why do i need to do this again???
 
         glVertexAttribPointer(                              // set how it'll be used in the shader:
@@ -118,11 +112,13 @@ class rendering_app: public application {
             GL_FALSE,                                       // - should the data be normalized?
             sizeof(float)*3, 0);                            // - gap between elements, offset
 
-        while (windowing::update()) {
+        glEnableVertexAttribArray(0);                       // enable attribute #0 for shader
+
+        do {
             wnd.use();
             glUseProgram(shprog);
-            glDrawArrays(GL_POINTS, 0, 1);                  // draw the data in the arrays: starting from 0th, 1 element in total
-        }
+            glDrawArrays(GL_TRIANGLES, 0, 3);               // draw the data in the arrays: starting from 0th, 1 element in total
+        } while (windowing::update());
 
         wnd.use();
         glDisableVertexAttribArray(0);                      // disable the shader attribute so that it doesn't cause troubles later
