@@ -85,16 +85,26 @@ class rendering_app: public application {
             // fprintf(stderr, "%s", info_log);
         }
 
-        float vert_data[9] = {                              // data for vertices: 3 floats for each (X Y Z)
-            -1., -1., 0.,
+        float vert_data[] = {                              // data for vertices: 3 floats for each (X Y Z)
+             1.,  1., 0.,
              1., -1., 0.,
-             0.,  1., 0.,
+            -1., -1., 0.,
+            -1.,  1., 0.,
         };
 
-        GLuint vbo, vao;
+        unsigned int indices[] = {
+            0, 1, 3,
+            1, 2, 3,
+        };
+
+        GLuint vbo, vao, ebo;
         glGenBuffers(1, &vbo);                              // generate a buffer for the data
+        glGenBuffers(1, &ebo);
         glGenVertexArrays(1, &vao);
         glBindVertexArray(vao);
+
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
+        glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
 
         glBindBuffer(GL_ARRAY_BUFFER, vbo);                 // use the buffer as a vertex buffer (vertex array)
 
@@ -117,7 +127,7 @@ class rendering_app: public application {
         do {
             wnd.use();
             glUseProgram(shprog);
-            glDrawArrays(GL_TRIANGLES, 0, 3);               // draw the data in the arrays: starting from 0th, 1 element in total
+            glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
         } while (windowing::update());
 
         wnd.use();
