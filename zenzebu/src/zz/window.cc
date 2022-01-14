@@ -35,9 +35,16 @@ void window::init() {
     glfwSetWindowSizeCallback(wnd, glfw_on_resize);
 
     ZZ_CORE_INFO("window '{0}' initialized", title);
+
+    glfwMakeContextCurrent(wnd);
 }
 
 void window::use() {
+    if (!wnd) {
+        ZZ_CORE_WARN("window not initialized before use");
+        init();
+    }
+
     glfwMakeContextCurrent(wnd);
 }
 
@@ -96,7 +103,8 @@ bool windowing::init() {
 
     auto view = ecs::entt()->view<window>();
 
-    view.each([](window &wnd) {
+    view.each([](entity e, window &wnd) {
+        ZZ_CORE_INFO("Initing window of entity {}", e);
         wnd.init();
     });
 
@@ -109,6 +117,8 @@ bool windowing::update() {
     bool any_updated = false;
 
     view.each([&any_updated](entity e, window &wnd) {
+        ZZ_CORE_INFO("Updating window of entity {}", e);
+
         if (wnd.should_close()) {
             ZZ_CORE_INFO("closing window '{0}'", wnd.title);
             wnd.close();

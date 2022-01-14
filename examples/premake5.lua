@@ -9,7 +9,7 @@ function example_project(name)
     objdir   (obj_dir)
     files { name .. '/src/**.cc' }
     includedirs(inc_dir.all)
-    links { 'zenzebu', 'zenzebu-glad' }
+    links { 'zenzebu', 'zenzebu-glad', 'zenzebu-glfw' }
 
     filter "system:linux"
         defines { "ZZ_LINUX" }

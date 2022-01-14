@@ -1,5 +1,6 @@
 extern "C" {
 #include <glad/glad.h>
+#include "GLFW/glfw3.h"
 }
 #include "zz.h"
 #include "glm/glm.hpp"
@@ -17,13 +18,82 @@ class rendering_app: public application {
         auto entt = ecs::entt();
 
         auto ent = entt->create();
-        auto wnd = entt->emplace<window>(ent, "rendering example", 1024, 768, true);
+        volatile auto wnd = entt->emplace<window>(ent, "rendering example", 1024, 768, true);
+
+        ZZ_INFO("Entity ID: {}", ent);
 
         windowing::init();
+        // wnd.use();
 
-        gladLoadGL();
+        gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
 
-        wnd.use();
+        char *glver = (char *) glGetString(GL_VERSION);
+        ZZ_INFO("GL version: {}", glver);
+
+        GLuint shprog, shvert, shfrag;
+        std::string vert_src =
+            "#version 330\n"
+            "layout (location = 0) in vec3 pos;\n"
+            "void main() {\n"
+            "  gl_Position = vec4(.5 * pos.x, .5 * pos.y, pos.z, 1.0);\n"
+            "}";
+        int vert_len = vert_src.length();
+        const char *vert_src_c = vert_src.c_str();
+
+        std::string frag_src = 
+            "#version 330\n"
+            "out vec4 frag_color;\n"
+            "void main() {\n"
+            "  frag_color = vec4(1.0, 0.0, 0.0, 1.0);\n"
+            "}";
+        int frag_len = frag_src.length();
+        const char *frag_src_c = frag_src.c_str();
+
+        shprog = glCreateProgram();
+        shvert = glCreateShader(GL_VERTEX_SHADER);
+        shfrag = glCreateShader(GL_FRAGMENT_SHADER);
+
+        glShaderSource(shvert, 1, &vert_src_c, &vert_len);
+        glShaderSource(shfrag, 1, &frag_src_c, &frag_len);
+
+        int isok, err;
+        char info_log[1024];
+
+        glCompileShader(shvert);
+        glGetShaderiv(shvert, GL_COMPILE_STATUS, &isok);
+        if (isok) glAttachShader(shprog, shvert);
+        else {
+            err = glGetError();
+            ZZ_ERROR("{} NOERR={} IENUM={} IVAL={} IOP={} IFBOP={} IOOM={}", err, GL_NO_ERROR, GL_INVALID_ENUM, GL_INVALID_VALUE, GL_INVALID_OPERATION, GL_INVALID_FRAMEBUFFER_OPERATION, GL_OUT_OF_MEMORY);
+
+            glGetShaderInfoLog(shvert, sizeof(info_log), nullptr, info_log);
+            ZZ_ERROR("Vertex shader compilation failed: {}", info_log);
+            // fprintf(stderr, "%s", info_log);
+        } 
+
+        glCompileShader(shfrag);
+        glGetShaderiv(shfrag, GL_COMPILE_STATUS, &isok);
+        if (isok) glAttachShader(shprog, shfrag);
+        else {
+            err = glGetError();
+            ZZ_ERROR("{} NOERR={} IENUM={} IVAL={} IOP={} IFBOP={} IOOM={}", err, GL_NO_ERROR, GL_INVALID_ENUM, GL_INVALID_VALUE, GL_INVALID_OPERATION, GL_INVALID_FRAMEBUFFER_OPERATION, GL_OUT_OF_MEMORY);
+
+            glGetShaderInfoLog(shfrag, sizeof(info_log), nullptr, info_log);
+            ZZ_ERROR("Fragment shader compilation failed: {}", info_log);
+            // fprintf(stderr, "%s", info_log);
+        }
+
+        glLinkProgram(shprog);
+        glGetProgramiv(shprog, GL_LINK_STATUS, &isok);
+        if (!isok) {
+            err = glGetError();
+            ZZ_ERROR("{} NOERR={} IENUM={} IVAL={} IOP={} IFBOP={} IOOM={}", err, GL_NO_ERROR, GL_INVALID_ENUM, GL_INVALID_VALUE, GL_INVALID_OPERATION, GL_INVALID_FRAMEBUFFER_OPERATION, GL_OUT_OF_MEMORY);
+
+
+            glGetProgramInfoLog(shprog, sizeof(info_log), nullptr, info_log);
+            ZZ_ERROR("Shader program linkage failed: {}", info_log);
+            // fprintf(stderr, "%s", info_log);
+        }
 
         float vert_data[3] = { 0, 0, 0 };                   // data for vertices: 3 floats for each (X Y Z)
 
@@ -50,6 +120,7 @@ class rendering_app: public application {
 
         while (windowing::update()) {
             wnd.use();
+            glUseProgram(shprog);
             glDrawArrays(GL_POINTS, 0, 1);                  // draw the data in the arrays: starting from 0th, 1 element in total
         }
 
