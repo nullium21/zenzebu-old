@@ -18,12 +18,12 @@ class rendering_app: public application {
         auto entt = ecs::entt();
 
         auto ent = entt->create();
-        volatile auto wnd = entt->emplace<window>(ent, "rendering example", 1024, 768, true);
+        auto &wnd = entt->emplace<window>(ent, "rendering example", 1024, 768, true);
 
         ZZ_INFO("Entity ID: {}", ent);
 
         windowing::init();
-        // wnd.use();
+        wnd.use();
 
         gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
 
