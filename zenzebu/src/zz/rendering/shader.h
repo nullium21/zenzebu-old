@@ -24,9 +24,6 @@ namespace zz::render {
 
     class shader {
     public:
-        shader(std::string &vert, std::string &frag);
-        shader(std::istream &vert, std::istream &frag);
-
         shader(shader_code &vert, shader_code &frag, std::vector<attribute> attrs);
 
         bool is_initialized();
@@ -52,8 +49,14 @@ namespace zz::render {
         void uniform(std::string name, uint x, uint y, uint z, uint w);
 
         int get_id();
+
+        void apply_attrs();
     private:
+        void init(std::string &vert, std::string &frag);
+
         int id = -1;
-        std::vector<attribute> attrs;
+        std::vector<attribute> attrs = {};
+
+        int vertex_stride = 0;
     };
 }

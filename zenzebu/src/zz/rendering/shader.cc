@@ -31,7 +31,56 @@ constexpr const char *data_type_to_string(data_type dt) {
     }
 }
 
-shader::shader(std::string &vert, std::string &frag) {
+constexpr int data_type_sizeof(data_type dt) {
+    switch (dt) {
+        case data_type::float1: return sizeof(float);
+        case data_type::float2: return sizeof(float)*2;
+        case data_type::float3: return sizeof(float)*3;
+        case data_type::float4: return sizeof(float)*4;
+
+        case data_type::int1: return sizeof(int);
+        case data_type::int2: return sizeof(int)*2;
+        case data_type::int3: return sizeof(int)*3;
+        case data_type::int4: return sizeof(int)*4;
+        
+        case data_type::uint1: return sizeof(uint);
+        case data_type::uint2: return sizeof(uint)*2;
+        case data_type::uint3: return sizeof(uint)*3;
+        case data_type::uint4: return sizeof(uint)*4;
+        
+    }
+}
+
+constexpr int dt_count(data_type dt) {
+    switch (dt) {
+        case data_type::float1: case data_type::int1: case data_type::uint1:
+            return 1;
+
+        case data_type::float2: case data_type::int2: case data_type::uint2:
+            return 2;
+
+        case data_type::float3: case data_type::int3: case data_type::uint3:
+            return 3;
+
+        case data_type::float4: case data_type::int4: case data_type::uint4:
+            return 4;
+    }
+}
+
+constexpr int dt_item_type(data_type dt) {
+    switch (dt) {
+        case data_type::float1: case data_type::float2: case data_type::float3: case data_type::float4:
+            return GL_FLOAT;
+
+        case data_type::int1: case data_type::int2: case data_type::int3: case data_type::int4:
+            return GL_INT;
+
+        case data_type::uint1: case data_type::uint2: case data_type::uint3: case data_type::uint4:
+            return GL_UNSIGNED_BYTE;
+    }
+}
+
+void shader::init(std::string &vert, std::string &frag) {
     uint vert_id = glCreateShader(GL_VERTEX_SHADER);
     uint frag_id = glCreateShader(GL_FRAGMENT_SHADER);
 
@@ -105,39 +154,37 @@ shader::shader(std::string &vert, std::string &frag) {
     glDeleteShader(frag_id);
 }
 
-shader::shader(std::istream &vert, std::istream &frag) {
-    std::stringstream ss_vert, ss_frag;
-
-    ss_vert << vert.rdbuf();
-    ss_frag << frag.rdbuf();
-
-    std::string vert_src = ss_vert.str();
-    std::string frag_src = ss_frag.str();
-
-    new (this) shader(vert_src, frag_src);
-}
-
 shader::shader(
     shader_code &vert, shader_code &frag,
-    std::vector<attribute> attrs
-): attrs(attrs) {
+    std::vector<attribute> _attrs) {
+
+    attrs = _attrs;
+
     std::stringstream ss_vert, ss_frag;
 
     ss_vert << vert.prefix;
     ss_frag << frag.prefix;
 
-    for (attribute attr : attrs) {
+    for (attribute attr : _attrs) {
         switch (attr.attr_type) {
             case attribute::vertex_in:
-                ss_vert << "in "  << data_type_to_string(attr.type) << " " << attr.name << ";"; break;
+                ss_vert << "in "  << data_type_to_string(attr.type) << " " << attr.name << ";";
+                vertex_stride += data_type_sizeof(attr.type);
+                break;
+
             case attribute::fragment_in:
                 ss_vert << "out " << data_type_to_string(attr.type) << " " << attr.name << ";";
-                ss_frag << "in "  << data_type_to_string(attr.type) << " " << attr.name << ";"; break;
+                ss_frag << "in "  << data_type_to_string(attr.type) << " " << attr.name << ";";
+                break;
+
             case attribute::fragment_out:
-                ss_frag << "out " << data_type_to_string(attr.type) << " " << attr.name << ";"; break;
+                ss_frag << "out " << data_type_to_string(attr.type) << " " << attr.name << ";";
+                break;
+
             case attribute::uniform:
                 ss_vert << "uniform " << data_type_to_string(attr.type) << " " << attr.name << ";";
-                ss_frag << "uniform " << data_type_to_string(attr.type) << " " << attr.name << ";"; break;
+                ss_frag << "uniform " << data_type_to_string(attr.type) << " " << attr.name << ";";
+                break;
         }
     }
 
@@ -150,10 +197,7 @@ shader::shader(
     std::string vert_src = ss_vert.str();
     std::string frag_src = ss_frag.str();
 
-    ZZ_CORE_INFO("Generated vertex shader source: {}", vert_src);
-    ZZ_CORE_INFO("Generated fragment shader source: {}", frag_src);
-
-    new (this) shader(vert_src, frag_src);
+    init(vert_src, frag_src);
 }
 
 shader::~shader() {
@@ -181,3 +225,18 @@ void shader::uniform(std::string name,   int x,   int y,   int z,   int w) { SET
 void shader::uniform(std::string name,  uint x,  uint y,  uint z,  uint w) { SET_UNIFORM(4ui, x, y, z, w); }
 
 int shader::get_id() { return id; }
+
+void shader::apply_attrs() {
+    use();
+
+    int offset = 0;
+    for (attribute attr : attrs) {
+        if (attr.attr_type != attribute::vertex_in) continue;
+
+        int idx = glGetAttribLocation(id, attr.name.c_str());
+
+        glVertexAttribPointer(idx, dt_count(attr.type), dt_item_type(attr.type), GL_FALSE, vertex_stride, (void *) offset);
+
+        offset += data_type_sizeof(attr.type);
+    }
+}

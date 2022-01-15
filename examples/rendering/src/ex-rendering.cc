@@ -67,11 +67,8 @@ class rendering_app: public application {
         int vbo = opengl::create_vbo(vert_data, sizeof(vert_data), draw_type::static_draw);
         int ebo = opengl::create_ebo(indices, sizeof(indices), draw_type::static_draw);
 
-        glVertexAttribPointer(                              // set how it'll be used in the shader:
-            0, 3,                                           // - index of the array (0), number of entries in every piece of data (3 - X Y Z),
-            GL_FLOAT,                                       // - type of the elements (float),
-            GL_FALSE,                                       // - should the data be normalized?
-            sizeof(float)*3, 0);                            // - gap between elements, offset
+        wnd.use();
+        sh.apply_attrs();
 
         glEnableVertexAttribArray(0);                       // enable attribute #0 for shader
 
