@@ -41,8 +41,9 @@ class rendering_app: public application {
         std::string frag_src = 
             "#version 330\n"
             "out vec4 frag_color;\n"
+            "uniform int t;\n"
             "void main() {\n"
-            "  frag_color = vec4(1.0, 0.0, 0.0, 1.0);\n"
+            "  frag_color = vec4(t/1024.0, 0.0, 0.0, 1.0);\n"
             "}";
 
         int shvert = opengl::compile_shader(shader_type::vertex, vert_src);
@@ -73,12 +74,19 @@ class rendering_app: public application {
 
         glEnableVertexAttribArray(0);                       // enable attribute #0 for shader
 
+        int t = 0, dt = 1;
+
         do {
             wnd.use();
 
-            opengl::use_program(shprog);
+            opengl::set_uniform(shprog, "t", t);
             opengl::use_vao(vao);
             glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+            t += dt;
+            if (t >= 1024) dt = -1;
+            if (t <=    0) dt = +1;
+            if (dt <    0) dt--;
+            if (dt >=   0) dt++;
         } while (windowing::update());
 
         wnd.use();

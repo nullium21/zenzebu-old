@@ -3,6 +3,8 @@
 #include <string>
 
 namespace zz::render {
+    using uint = unsigned int;
+
     enum class shader_type: unsigned int {
         vertex,
         fragment
@@ -40,6 +42,20 @@ namespace zz::render {
         static void use_ebo(int ebo);
         static void use_vao(int vao);
 
-        static void set_vertex_attribute_pointer(int idx);
+        static void set_uniform(int prog, std::string name, float x);
+        static void set_uniform(int prog, std::string name,   int x);
+        static void set_uniform(int prog, std::string name,  uint x);
+
+        static void set_uniform(int prog, std::string name, float x, float y);
+        static void set_uniform(int prog, std::string name,   int x,   int y);
+        static void set_uniform(int prog, std::string name,  uint x,  uint y);
+
+        static void set_uniform(int prog, std::string name, float x, float y, float z);
+        static void set_uniform(int prog, std::string name,   int x,   int y,   int z);
+        static void set_uniform(int prog, std::string name,  uint x,  uint y,  uint z);
+
+        static void set_uniform(int prog, std::string name, float x, float y, float z, float w);
+        static void set_uniform(int prog, std::string name,   int x,   int y,   int z,   int w);
+        static void set_uniform(int prog, std::string name,  uint x,  uint y,  uint z,  uint w);
     };
 }

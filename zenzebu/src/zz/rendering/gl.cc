@@ -7,6 +7,7 @@ extern "C" {
 
 #define GET_STATUS(id, type) int isok; glGetShaderiv(id, type, &isok); return isok
 #define GET_LOG(id, fn) int len; glGetShaderiv(id, GL_INFO_LOG_LENGTH, &len); std::string log; log.reserve(len); fn(id, len, nullptr, log.data()); return log
+#define SET_UNIFORM(type, ...) use_program(prog); int loc = glGetUniformLocation(prog, name.c_str()); glUniform##type(loc, __VA_ARGS__)
 
 using namespace zz::render;
 
@@ -115,4 +116,52 @@ void opengl::use_vao(int vao) {
 
 void opengl::use_ebo(int ebo) {
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
+}
+
+void opengl::set_uniform(int prog, std::string name, float x) {
+    SET_UNIFORM(1f, x);
+}
+
+void opengl::set_uniform(int prog, std::string name, int x) {
+    SET_UNIFORM(1i, x);
+}
+
+void opengl::set_uniform(int prog, std::string name, uint x) {
+    SET_UNIFORM(1ui, x);
+}
+
+void opengl::set_uniform(int prog, std::string name, float x, float y) {
+    SET_UNIFORM(2f, x, y);
+}
+
+void opengl::set_uniform(int prog, std::string name, int x, int y) {
+    SET_UNIFORM(2i, x, y);
+}
+
+void opengl::set_uniform(int prog, std::string name, uint x, uint y) {
+    SET_UNIFORM(2ui, x, y);
+}
+
+void opengl::set_uniform(int prog, std::string name, float x, float y, float z) {
+    SET_UNIFORM(3f, x, y, z);
+}
+
+void opengl::set_uniform(int prog, std::string name, int x, int y, int z) {
+    SET_UNIFORM(3i, x, y, z);
+}
+
+void opengl::set_uniform(int prog, std::string name, uint x, uint y, uint z) {
+    SET_UNIFORM(3ui, x, y, z);
+}
+
+void opengl::set_uniform(int prog, std::string name, float x, float y, float z, float w) {
+    SET_UNIFORM(4f, x, y, z, w);
+}
+
+void opengl::set_uniform(int prog, std::string name, int x, int y, int z, int w) {
+    SET_UNIFORM(4i, x, y, z, w);
+}
+
+void opengl::set_uniform(int prog, std::string name, uint x, uint y, uint z, uint w) {
+    SET_UNIFORM(4ui, x, y, z, w);
 }
