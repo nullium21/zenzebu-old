@@ -46,9 +46,7 @@ class rendering_app: public application {
             "  frag_color = vec4(t/1024.0, 0.0, 0.0, 1.0);\n"
             "}";
 
-        int shvert = opengl::compile_shader(shader_type::vertex, vert_src);
-        int shfrag = opengl::compile_shader(shader_type::fragment, frag_src);
-        int shprog = opengl::create_program(shvert, shfrag);
+        shader sh(vert_src, frag_src);
 
         float vert_data[] = {                              // data for vertices: 3 floats for each (X Y Z)
              1.,  1., 0.,
@@ -79,7 +77,7 @@ class rendering_app: public application {
         do {
             wnd.use();
 
-            opengl::set_uniform(shprog, "t", t);
+            sh.uniform("t", t);
             opengl::use_vao(vao);
             glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
             t += dt;

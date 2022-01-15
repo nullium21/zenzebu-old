@@ -6,3 +6,4 @@
 #include "zz/layer.h"
 
 #include "zz/rendering/gl.h"
+#include "zz/rendering/shader.h"
