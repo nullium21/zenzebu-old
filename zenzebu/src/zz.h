@@ -4,3 +4,5 @@
 #include "zz/script.h"
 #include "zz/window.h"
 #include "zz/layer.h"
+
+#include "zz/rendering/gl.h"
