@@ -12,6 +12,25 @@ using namespace zz::render;
 
 #define SET_UNIFORM(t, ...) use(); int loc = glGetUniformLocation(id, name.c_str()); glUniform##t(loc, __VA_ARGS__)
 
+constexpr const char *data_type_to_string(data_type dt) {
+    switch (dt) {
+        case data_type::float1: return "float";
+        case data_type::float2: return "vec2";
+        case data_type::float3: return "vec3";
+        case data_type::float4: return "vec4";
+
+        case data_type::int1: return "int";
+        case data_type::int2: return "ivec2";
+        case data_type::int3: return "ivec3";
+        case data_type::int4: return "ivec4";
+
+        case data_type::uint1: return "uint";
+        case data_type::uint2: return "uvec2";
+        case data_type::uint3: return "uvec3";
+        case data_type::uint4: return "uvec4";
+    }
+}
+
 shader::shader(std::string &vert, std::string &frag) {
     uint vert_id = glCreateShader(GL_VERTEX_SHADER);
     uint frag_id = glCreateShader(GL_FRAGMENT_SHADER);
@@ -94,6 +113,45 @@ shader::shader(std::istream &vert, std::istream &frag) {
 
     std::string vert_src = ss_vert.str();
     std::string frag_src = ss_frag.str();
+
+    new (this) shader(vert_src, frag_src);
+}
+
+shader::shader(
+    shader_code &vert, shader_code &frag,
+    std::vector<attribute> attrs
+): attrs(attrs) {
+    std::stringstream ss_vert, ss_frag;
+
+    ss_vert << vert.prefix;
+    ss_frag << frag.prefix;
+
+    for (attribute attr : attrs) {
+        switch (attr.attr_type) {
+            case attribute::vertex_in:
+                ss_vert << "in "  << data_type_to_string(attr.type) << " " << attr.name << ";"; break;
+            case attribute::fragment_in:
+                ss_vert << "out " << data_type_to_string(attr.type) << " " << attr.name << ";";
+                ss_frag << "in "  << data_type_to_string(attr.type) << " " << attr.name << ";"; break;
+            case attribute::fragment_out:
+                ss_frag << "out " << data_type_to_string(attr.type) << " " << attr.name << ";"; break;
+            case attribute::uniform:
+                ss_vert << "uniform " << data_type_to_string(attr.type) << " " << attr.name << ";";
+                ss_frag << "uniform " << data_type_to_string(attr.type) << " " << attr.name << ";"; break;
+        }
+    }
+
+    ss_vert << "void main() {" << vert.main << "}";
+    ss_frag << "void main() {" << frag.main << "}";
+
+    ss_vert << vert.postfix;
+    ss_frag << frag.postfix;
+
+    std::string vert_src = ss_vert.str();
+    std::string frag_src = ss_frag.str();
+
+    ZZ_CORE_INFO("Generated vertex shader source: {}", vert_src);
+    ZZ_CORE_INFO("Generated fragment shader source: {}", frag_src);
 
     new (this) shader(vert_src, frag_src);
 }

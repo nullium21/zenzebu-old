@@ -16,6 +16,13 @@ namespace zz::render {
         stream
     };
 
+    enum class data_type: unsigned int {
+        float1, int1, uint1,
+        float2, int2, uint2,
+        float3, int3, uint3,
+        float4, int4, uint4
+    };
+
     class opengl {
         opengl() = delete;
         ~opengl() = delete;

@@ -2,12 +2,32 @@
 
 #include <string>
 #include <istream>
+#include <vector>
+
+#include "gl.h"
 
 namespace zz::render {
+    struct attribute {
+        std::string name;
+        data_type type;
+
+        enum {
+            vertex_in, fragment_in, fragment_out, uniform
+        } attr_type;
+    };
+
+    struct shader_code {
+        std::string prefix;
+        std::string main;
+        std::string postfix;
+    };
+
     class shader {
     public:
         shader(std::string &vert, std::string &frag);
         shader(std::istream &vert, std::istream &frag);
+
+        shader(shader_code &vert, shader_code &frag, std::vector<attribute> attrs);
 
         bool is_initialized();
 
@@ -34,5 +54,6 @@ namespace zz::render {
         int get_id();
     private:
         int id = -1;
+        std::vector<attribute> attrs;
     };
 }

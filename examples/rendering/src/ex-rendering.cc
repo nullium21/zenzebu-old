@@ -31,22 +31,25 @@ class rendering_app: public application {
         char *glver = (char *) glGetString(GL_VERSION);
         ZZ_INFO("GL version: {}", glver);
 
-        std::string vert_src =
-            "#version 330\n"
-            "layout (location = 0) in vec3 pos;\n"
-            "void main() {\n"
-            "  gl_Position = vec4(.5 * pos.x, .5 * pos.y, pos.z, 1.0);\n"
-            "}";
+        shader_code vert = {
+            .prefix  = "#version 330\n",
+            .main    = "gl_Position = vec4(.5 * pos.x, .5 * pos.y, pos.z, 1.0);",
+            .postfix = ""
+        };
 
-        std::string frag_src = 
-            "#version 330\n"
-            "out vec4 frag_color;\n"
-            "uniform int t;\n"
-            "void main() {\n"
-            "  frag_color = vec4(t/1024.0, 0.0, 0.0, 1.0);\n"
-            "}";
+        shader_code frag = {
+            .prefix  = "#version 330\n",
+            .main    = "fgc = vec4(t / 1024.0, 0.0, 0.0, 1.0);",
+            .postfix = ""
+        };
 
-        shader sh(vert_src, frag_src);
+        std::vector<render::attribute> sh_attrs {
+            { "pos", data_type::float3, attribute::vertex_in },
+            { "t"  , data_type::int1  , attribute::uniform },
+            { "fgc", data_type::float4, attribute::fragment_out },
+        };
+
+        shader sh(vert, frag, sh_attrs);
 
         float vert_data[] = {                              // data for vertices: 3 floats for each (X Y Z)
              1.,  1., 0.,
