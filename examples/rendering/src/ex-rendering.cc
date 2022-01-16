@@ -51,21 +51,15 @@ class rendering_app: public application {
 
         shader sh(vert, frag, sh_attrs);
 
-        float vert_data[] = {                              // data for vertices: 3 floats for each (X Y Z)
-             1.,  1., 0.,
-             1., -1., 0.,
-            -1., -1., 0.,
-            -1.,  1., 0.,
-        };
-
-        unsigned int indices[] = {
+        meshbuffer msh({
+            {  1,  1, 0 },
+            {  1, -1, 0 },
+            { -1, -1, 0 },
+            { -1,  1, 0 }
+        }, {
             0, 1, 3,
-            1, 2, 3,
-        };
-
-        int vao = opengl::create_vao();
-        int vbo = opengl::create_vbo(vert_data, sizeof(vert_data), draw_type::static_draw);
-        int ebo = opengl::create_ebo(indices, sizeof(indices), draw_type::static_draw);
+            1, 2, 3
+        }, draw_type::static_draw);
 
         wnd.use();
         sh.apply_attrs();
@@ -78,7 +72,7 @@ class rendering_app: public application {
             wnd.use();
 
             sh.uniform("t", t);
-            opengl::use_vao(vao);
+            msh.use();
             glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
             t += dt;
             if (t >= 1024) dt = -1;
