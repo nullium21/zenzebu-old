@@ -1,5 +1,6 @@
 inc_dir = {}
 inc_dir.entt = '%{wks.location}/zenzebu/entt/src'
+inc_dir.stb  = '%{wks.location}/zenzebu/stb'
 inc_dir.zz   = '%{wks.location}/zenzebu/src'
 
 project 'zenzebu-lua'
@@ -110,7 +111,8 @@ project 'zenzebu'
 
     files {
         'src/**.cc', 'src/**.h',
-        '%{inc_dir.entt}/**.hpp'
+        '%{inc_dir.entt}/**.hpp',
+        '%{inc_dir.stb}/*.h'
     }
 
     includedirs {
@@ -119,6 +121,7 @@ project 'zenzebu'
         '%{inc_dir.glfw}',
         '%{inc_dir.glad}',
         '%{inc_dir.glm}',
+        '%{inc_dir.stb}',
         '%{inc_dir.zz}'
     }
 
@@ -146,5 +149,6 @@ inc_dir.all = {
     inc_dir.zz,
     inc_dir.entt,
     inc_dir.glad, inc_dir.glfw, inc_dir.glm,
-    inc_dir.lua
+    inc_dir.lua,
+    inc_dir.stb
 }
