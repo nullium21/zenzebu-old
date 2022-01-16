@@ -51,6 +51,10 @@ namespace zz::render {
         int get_id();
 
         void apply_attrs();
+
+        std::vector<attribute> &get_attrs();
+
+        bool has_attr(std::string name, data_type type);
     private:
         void init(std::string &vert, std::string &frag);
 

@@ -10,7 +10,19 @@ extern "C" {
 
 using namespace zz::render;
 
-#define SET_UNIFORM(t, ...) use(); int loc = glGetUniformLocation(id, name.c_str()); glUniform##t(loc, __VA_ARGS__)
+#define SET_UNIFORM_UNCHECKED(t, ...) \
+    use(); \
+    int loc = glGetUniformLocation(id, name.c_str()); \
+    glUniform##t(loc, __VA_ARGS__)
+
+#ifdef ZZ_DEBUG
+#define SET_UNIFORM(t, t2, ...) \
+    if (has_attr(name, data_type::t2)) { \
+        SET_UNIFORM_UNCHECKED(t, __VA_ARGS__); \
+    } else ZZ_CORE_ERROR("Invalid value given for uniform {}", name)
+#else
+#define SET_UNIFORM(t, t2, ...) SET_UNIFORM_UNCHECKED(t, __VA_ARGS__)
+#endif
 
 constexpr const char *data_type_to_string(data_type dt) {
     switch (dt) {
@@ -208,21 +220,21 @@ bool shader::is_initialized() { return id >= 0; }
 
 void shader::use() { glUseProgram(id); }
 
-void shader::uniform(std::string name, float x) { SET_UNIFORM(1f, x); }
-void shader::uniform(std::string name,   int x) { SET_UNIFORM(1i, x); }
-void shader::uniform(std::string name,  uint x) { SET_UNIFORM(1ui, x); }
+void shader::uniform(std::string name, float x) { SET_UNIFORM(1f, float1, x); }
+void shader::uniform(std::string name,   int x) { SET_UNIFORM(1i,   int1, x); }
+void shader::uniform(std::string name,  uint x) { SET_UNIFORM(1ui, uint1, x); }
 
-void shader::uniform(std::string name, float x, float y) { SET_UNIFORM(2f, x, y); }
-void shader::uniform(std::string name,   int x,   int y) { SET_UNIFORM(2i, x, y); }
-void shader::uniform(std::string name,  uint x,  uint y) { SET_UNIFORM(2ui, x, y); }
+void shader::uniform(std::string name, float x, float y) { SET_UNIFORM(2f, float2, x, y); }
+void shader::uniform(std::string name,   int x,   int y) { SET_UNIFORM(2i,   int2, x, y); }
+void shader::uniform(std::string name,  uint x,  uint y) { SET_UNIFORM(2ui, uint2, x, y); }
 
-void shader::uniform(std::string name, float x, float y, float z) { SET_UNIFORM(3f, x, y, z); }
-void shader::uniform(std::string name,   int x,   int y,   int z) { SET_UNIFORM(3i, x, y, z); }
-void shader::uniform(std::string name,  uint x,  uint y,  uint z) { SET_UNIFORM(3ui, x, y, z); }
+void shader::uniform(std::string name, float x, float y, float z) { SET_UNIFORM(3f, float3, x, y, z); }
+void shader::uniform(std::string name,   int x,   int y,   int z) { SET_UNIFORM(3i,   int3, x, y, z); }
+void shader::uniform(std::string name,  uint x,  uint y,  uint z) { SET_UNIFORM(3ui, uint3, x, y, z); }
 
-void shader::uniform(std::string name, float x, float y, float z, float w) { SET_UNIFORM(4f, x, y, z, w); }
-void shader::uniform(std::string name,   int x,   int y,   int z,   int w) { SET_UNIFORM(4i, x, y, z, w); }
-void shader::uniform(std::string name,  uint x,  uint y,  uint z,  uint w) { SET_UNIFORM(4ui, x, y, z, w); }
+void shader::uniform(std::string name, float x, float y, float z, float w) { SET_UNIFORM(4f, float4, x, y, z, w); }
+void shader::uniform(std::string name,   int x,   int y,   int z,   int w) { SET_UNIFORM(4i,   int4, x, y, z, w); }
+void shader::uniform(std::string name,  uint x,  uint y,  uint z,  uint w) { SET_UNIFORM(4ui, uint4, x, y, z, w); }
 
 int shader::get_id() { return id; }
 
@@ -239,4 +251,17 @@ void shader::apply_attrs() {
 
         offset += data_type_sizeof(attr.type);
     }
+}
+
+std::vector<attribute> &shader::get_attrs() {
+    return attrs;
+}
+
+bool shader::has_attr(std::string name, data_type type) {
+    for (attribute attr : attrs) {
+        if (attr.name == name && attr.type == type)
+            return true;
+    }
+
+    return false;
 }
