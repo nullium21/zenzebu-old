@@ -11,7 +11,7 @@ extern "C" {
 using namespace zz::render;
 
 #define SET_UNIFORM_UNCHECKED(t, ...) \
-    use(); \
+    /* use(); */ \
     int loc = glGetUniformLocation(id, name.c_str()); \
     glUniform##t(loc, __VA_ARGS__)
 
@@ -40,6 +40,8 @@ constexpr const char *data_type_to_string(data_type dt) {
         case data_type::uint2: return "uvec2";
         case data_type::uint3: return "uvec3";
         case data_type::uint4: return "uvec4";
+
+        case data_type::sampler2d: return "sampler2D";
     }
 }
 
@@ -59,6 +61,8 @@ constexpr int data_type_sizeof(data_type dt) {
         case data_type::uint2: return sizeof(uint)*2;
         case data_type::uint3: return sizeof(uint)*3;
         case data_type::uint4: return sizeof(uint)*4;
+
+        default: return 0;
         
     }
 }
@@ -76,6 +80,8 @@ constexpr int dt_count(data_type dt) {
 
         case data_type::float4: case data_type::int4: case data_type::uint4:
             return 4;
+
+        default: return 0;
     }
 }
 
@@ -89,6 +95,8 @@ constexpr int dt_item_type(data_type dt) {
 
         case data_type::uint1: case data_type::uint2: case data_type::uint3: case data_type::uint4:
             return GL_UNSIGNED_BYTE;
+
+        default: return 0;
     }
 }
 
@@ -194,7 +202,8 @@ shader::shader(
                 break;
 
             case attribute::uniform:
-                ss_vert << "uniform " << data_type_to_string(attr.type) << " " << attr.name << ";";
+                if (attr.type != data_type::sampler2d)
+                    ss_vert << "uniform " << data_type_to_string(attr.type) << " " << attr.name << ";";
                 ss_frag << "uniform " << data_type_to_string(attr.type) << " " << attr.name << ";";
                 break;
         }
@@ -208,6 +217,9 @@ shader::shader(
 
     std::string vert_src = ss_vert.str();
     std::string frag_src = ss_frag.str();
+
+    ZZ_CORE_INFO("{}", vert_src);
+    ZZ_CORE_INFO("{}", frag_src);
 
     init(vert_src, frag_src);
 }
@@ -235,6 +247,12 @@ void shader::uniform(std::string name,  uint x,  uint y,  uint z) { SET_UNIFORM(
 void shader::uniform(std::string name, float x, float y, float z, float w) { SET_UNIFORM(4f, float4, x, y, z, w); }
 void shader::uniform(std::string name,   int x,   int y,   int z,   int w) { SET_UNIFORM(4i,   int4, x, y, z, w); }
 void shader::uniform(std::string name,  uint x,  uint y,  uint z,  uint w) { SET_UNIFORM(4ui, uint4, x, y, z, w); }
+
+void shader::texture(std::string name, int unit, class texture &tex) {
+    glActiveTexture(GL_TEXTURE0 + unit);
+    tex.use();
+    SET_UNIFORM(1i, sampler2d, unit);
+}
 
 int shader::get_id() { return id; }
 

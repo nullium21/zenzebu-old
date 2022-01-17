@@ -20,7 +20,8 @@ namespace zz::render {
         float1, int1, uint1,
         float2, int2, uint2,
         float3, int3, uint3,
-        float4, int4, uint4
+        float4, int4, uint4,
+        sampler2d,
     };
 
     class opengl {

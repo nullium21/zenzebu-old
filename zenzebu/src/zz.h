@@ -8,3 +8,4 @@
 #include "zz/rendering/gl.h"
 #include "zz/rendering/shader.h"
 #include "zz/rendering/meshbuffer.h"
+#include "zz/rendering/texture.h"

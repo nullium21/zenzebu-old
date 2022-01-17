@@ -5,6 +5,7 @@
 #include <vector>
 
 #include "gl.h"
+#include "texture.h"
 
 namespace zz::render {
     struct attribute {
@@ -47,6 +48,8 @@ namespace zz::render {
         void uniform(std::string name, float x, float y, float z, float w);
         void uniform(std::string name, int x, int y, int z, int w);
         void uniform(std::string name, uint x, uint y, uint z, uint w);
+
+        void texture(std::string name, int unit, texture &tex);
 
         int get_id();
 
