@@ -1,7 +1,8 @@
 inc_dir = {}
-inc_dir.entt = '%{wks.location}/zenzebu/entt/src'
-inc_dir.stb  = '%{wks.location}/zenzebu/stb'
-inc_dir.zz   = '%{wks.location}/zenzebu/src'
+inc_dir.spdlog = '%{wks.location}/zenzebu/spdlog/include'
+inc_dir.entt   = '%{wks.location}/zenzebu/entt/src'
+inc_dir.stb    = '%{wks.location}/zenzebu/stb'
+inc_dir.zz     = '%{wks.location}/zenzebu/src'
 
 project 'zenzebu-lua'
     kind 'sharedlib'
@@ -122,6 +123,7 @@ project 'zenzebu'
         '%{inc_dir.glad}',
         '%{inc_dir.glm}',
         '%{inc_dir.stb}',
+        '%{inc_dir.spdlog}',
         '%{inc_dir.zz}'
     }
 
@@ -150,5 +152,6 @@ inc_dir.all = {
     inc_dir.entt,
     inc_dir.glad, inc_dir.glfw, inc_dir.glm,
     inc_dir.lua,
-    inc_dir.stb
+    inc_dir.stb,
+    inc_dir.spdlog
 }
