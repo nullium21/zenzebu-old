@@ -1,3 +1,7 @@
+local function codegen(filename)
+    return 'lua %{prj.location}/codegen/' .. filename .. ' > %{prj.location}/generated/' .. filename .. '.h'
+end
+
 inc_dir = {}
 inc_dir.spdlog = '%{wks.location}/zenzebu/spdlog/include'
 inc_dir.entt   = '%{wks.location}/zenzebu/entt/src'
@@ -131,8 +135,8 @@ project 'zenzebu'
     links { 'zenzebu-lua', 'zenzebu-glfw', 'zenzebu-glad' }
 
     prebuildcommands {
-        'lua %{prj.location}/codegen/mat-uniforms.lua > %{prj.location}/generated/mat-uniforms.lua.h',
-        'lua %{prj.location}/codegen/vec-uniforms.lua > %{prj.location}/generated/vec-uniforms.lua.h'
+        codegen 'mat-uniforms.lua',
+        codegen 'vec-uniforms.lua'
     }
 
     -- defines { 'ZZ_USEPCH' }
