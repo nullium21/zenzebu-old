@@ -18,7 +18,9 @@ namespace zz::render {
 
         ~texture();
 
-        void use();
+        void use() const;
+
+        int unit = 0;
     private:
         int id = -1;
 

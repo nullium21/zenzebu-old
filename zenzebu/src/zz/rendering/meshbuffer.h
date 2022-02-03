@@ -37,6 +37,7 @@ namespace zz::render {
         }
 
         void use() { glBindVertexArray(vao); }
+        void draw() { glDrawElements(GL_TRIANGLES, idx_count, GL_UNSIGNED_INT, 0); }
     private:
         int vao = -1;
         int vbo = -1;
@@ -51,6 +52,9 @@ namespace zz::render {
         draw_type drawt;
 
         void init(T *d, int nd, int *i, int ni) {
+            idx_count = ni;
+            data_count = nd;
+
             glGenVertexArrays(1, (unsigned int *) &vao);
             glBindVertexArray(vao);
 

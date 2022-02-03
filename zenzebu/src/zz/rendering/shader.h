@@ -3,9 +3,11 @@
 #include <string>
 #include <istream>
 #include <vector>
+#include <variant>
 
 #include "gl.h"
 #include "texture.h"
+#include "glm/glm.hpp"
 
 namespace zz::render {
     struct attribute {
@@ -21,6 +23,25 @@ namespace zz::render {
         std::string prefix;
         std::string main;
         std::string postfix;
+    };
+
+    struct shader_param {
+        std::string name;
+        data_type type;
+
+        std::variant<
+            glm::vec<1, float>, glm::vec<2, float>, glm::vec<3, float>, glm::vec<4, float>,
+            glm::vec<1,   int>, glm::vec<2,   int>, glm::vec<3,   int>, glm::vec<4,   int>,
+            glm::vec<1,  uint>, glm::vec<2,  uint>, glm::vec<3,  uint>, glm::vec<4,  uint>,
+
+            texture *
+        > value;
+    };
+
+    struct shader_params_holder {
+        std::vector<shader_param> params;
+
+        shader_params_holder(std::vector<shader_param> lst) : params(lst) {}
     };
 
     class shader {
@@ -49,7 +70,9 @@ namespace zz::render {
         void uniform(std::string name, int x, int y, int z, int w);
         void uniform(std::string name, uint x, uint y, uint z, uint w);
 
-        void texture(std::string name, int unit, texture &tex);
+        void texture(std::string name, int unit, const texture &tex);
+
+        void uniforms(shader_params_holder const &params);
 
         int get_id();
 

@@ -18,12 +18,18 @@ class rendering_app: public application {
 
         auto entt = ecs::entt();
 
-        auto ent = entt->create();
-        auto &wnd = entt->emplace<window>(ent, "rendering example", 1024, 768, true);
+        auto window_ent = entt->create();
+        auto &wnd = entt->emplace<window>(window_ent, "rendering example", 1024, 768, true);
+        auto &target = entt->emplace<window_render_target>(window_ent, &wnd);
+        auto &children = entt->emplace<zz::component::children>(window_ent);
 
-        ZZ_INFO("Entity ID: {}", ent);
+        auto mesh_ent = entt->create();
+        entt->emplace<zz::component::parent>(mesh_ent, window_ent);
+        children.children.push_back(mesh_ent);
 
-        windowing::init();
+        ZZ_INFO("Entity ID: {}", window_ent);
+
+        rendering::init();
         wnd.use();
 
         opengl::load();
@@ -57,19 +63,34 @@ class rendering_app: public application {
             { "tex"  , data_type::sampler2d, attribute::uniform },    // uniform        : texture
         };
 
-        shader sh(vert, frag, sh_attrs);
+        auto &sh = entt->emplace<shader>(mesh_ent, vert, frag, sh_attrs);
 
-        meshbuffer<textured_vert> msh({
+        std::vector<textured_vert> verts {
             { {  1,  1, 0 }, { 1, 1 } },
             { {  1, -1, 0 }, { 1, 0 } },
             { { -1, -1, 0 }, { 0, 0 } },
             { { -1,  1, 0 }, { 0, 1 } }
-        }, {
+        };
+
+        std::vector<int> idxs {
             0, 1, 3,
             1, 2, 3
-        }, draw_type::static_draw);
+        };
+
+        auto &msh = entt->emplace<meshbuffer<textured_vert>>(mesh_ent, verts, idxs, draw_type::static_draw);
 
         texture tex("examples/rendering/res/wall.jpg");
+
+        ZZ_INFO("before sparams creation");
+
+        std::vector<shader_param> sparams {
+            { "t", data_type::int1, glm::vec<1, int>(0) },
+            { "tex", data_type::sampler2d, &tex }
+        };
+
+        ZZ_INFO("after sparams creation");
+
+        auto &params = entt->emplace<shader_params_holder>(mesh_ent, sparams);
 
         wnd.use();
         sh.apply_attrs();
@@ -80,30 +101,21 @@ class rendering_app: public application {
         int t = 0, dt = 1;
 
         do {
-            ZZ_INFO("{} NE={} IE={} IV={} IO={} IF={} OM={}", glGetError(),
-                GL_NO_ERROR, GL_INVALID_ENUM, GL_INVALID_VALUE, GL_INVALID_OPERATION, GL_INVALID_FRAMEBUFFER_OPERATION, GL_OUT_OF_MEMORY);
+            // ZZ_INFO("{} NE={} IE={} IV={} IO={} IF={} OM={}", glGetError(),
+            //     GL_NO_ERROR, GL_INVALID_ENUM, GL_INVALID_VALUE, GL_INVALID_OPERATION, GL_INVALID_FRAMEBUFFER_OPERATION, GL_OUT_OF_MEMORY);
 
-            wnd.use();
-
-            sh.use();
-            sh.uniform("t", t);
-
-            sh.texture("tex", 0, tex);
-
-            msh.use();
-            glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
             t += dt;
             if (t >= 1024) dt = -1;
             if (t <=    0) dt = +1;
             if (dt <    0) dt--;
             if (dt >=   0) dt++;
-        } while (windowing::update());
+        } while (rendering::update<textured_vert>());
 
         wnd.use();
         glDisableVertexAttribArray(0);                      // disable the shader attribute so that it doesn't cause troubles later
         glDisableVertexAttribArray(1);
 
-        windowing::deinit();
+        rendering::deinit();
     }
 };
 

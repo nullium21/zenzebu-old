@@ -42,6 +42,6 @@ void texture::init(int w, int h, unsigned char *data, bool gen_mipmaps) {
     if (gen_mipmaps) glGenerateMipmap(GL_TEXTURE_2D);
 }
 
-void texture::use() {
+void texture::use() const {
     glBindTexture(GL_TEXTURE_2D, id);
 }

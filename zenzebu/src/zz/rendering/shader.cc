@@ -1,6 +1,8 @@
 #include <sstream>
+#include <variant>
 
 #include "zz/log.h"
+#include "zz/rendering/texture.h"
 
 extern "C" {
 #include "glad/glad.h"
@@ -248,7 +250,7 @@ void shader::uniform(std::string name, float x, float y, float z, float w) { SET
 void shader::uniform(std::string name,   int x,   int y,   int z,   int w) { SET_UNIFORM(4i,   int4, x, y, z, w); }
 void shader::uniform(std::string name,  uint x,  uint y,  uint z,  uint w) { SET_UNIFORM(4ui, uint4, x, y, z, w); }
 
-void shader::texture(std::string name, int unit, class texture &tex) {
+void shader::texture(std::string name, int unit, class texture const &tex) {
     glActiveTexture(GL_TEXTURE0 + unit);
     tex.use();
     SET_UNIFORM(1i, sampler2d, unit);
@@ -282,4 +284,29 @@ bool shader::has_attr(std::string name, data_type type) {
     }
 
     return false;
+}
+
+void shader::uniforms(const shader_params_holder &params) {
+    for (shader_param const &p : params.params) {
+        if (has_attr(p.name, p.type)) {
+            switch (p.type) {
+                case data_type::float1: uniform(p.name, std::get<glm::vec<1, float>>(p.value).x); break;
+                case data_type::float2: uniform(p.name, std::get<glm::vec<2, float>>(p.value).x, std::get<glm::vec<2, float>>(p.value).y); break;
+                case data_type::float3: uniform(p.name, std::get<glm::vec<3, float>>(p.value).x, std::get<glm::vec<3, float>>(p.value).y, std::get<glm::vec<3, float>>(p.value).z); break;
+                case data_type::float4: uniform(p.name, std::get<glm::vec<4, float>>(p.value).x, std::get<glm::vec<4, float>>(p.value).y, std::get<glm::vec<4, float>>(p.value).z, std::get<glm::vec<4, float>>(p.value).w); break;
+                case data_type::int1  : uniform(p.name, std::get<glm::vec<1,   int>>(p.value).x); break;
+                case data_type::int2  : uniform(p.name, std::get<glm::vec<2,   int>>(p.value).x, std::get<glm::vec<2,   int>>(p.value).y); break;
+                case data_type::int3  : uniform(p.name, std::get<glm::vec<3,   int>>(p.value).x, std::get<glm::vec<3,   int>>(p.value).y, std::get<glm::vec<3,   int>>(p.value).z); break;
+                case data_type::int4  : uniform(p.name, std::get<glm::vec<4,   int>>(p.value).x, std::get<glm::vec<4,   int>>(p.value).y, std::get<glm::vec<4,   int>>(p.value).z); break;
+                case data_type::uint1 : uniform(p.name, std::get<glm::vec<1,  uint>>(p.value).x); break;
+                case data_type::uint2 : uniform(p.name, std::get<glm::vec<2,  uint>>(p.value).x, std::get<glm::vec<2,  uint>>(p.value).y); break;
+                case data_type::uint3 : uniform(p.name, std::get<glm::vec<3,  uint>>(p.value).x, std::get<glm::vec<3,  uint>>(p.value).y, std::get<glm::vec<3,  uint>>(p.value).z); break;
+                case data_type::uint4 : uniform(p.name, std::get<glm::vec<4,  uint>>(p.value).x, std::get<glm::vec<4,  uint>>(p.value).y, std::get<glm::vec<4,  uint>>(p.value).z, std::get<glm::vec<4,  uint>>(p.value).w); break;
+
+                case data_type::sampler2d: texture(p.name, std::get<class texture *>(p.value)->unit, *std::get<class texture *>(p.value)); break;
+            }
+        } else {
+            ZZ_CORE_WARN("Unknown shader parameter '{}' ({}), skipping", p.name, data_type_to_string(p.type));
+        }
+    }
 }
