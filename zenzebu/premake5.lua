@@ -3,6 +3,7 @@ inc_dir.spdlog = '%{wks.location}/zenzebu/spdlog/include'
 inc_dir.entt   = '%{wks.location}/zenzebu/entt/src'
 inc_dir.stb    = '%{wks.location}/zenzebu/stb'
 inc_dir.zz     = '%{wks.location}/zenzebu/src'
+inc_dir.zzroot = '%{wks.location}/zenzebu'
 
 project 'zenzebu-lua'
     kind 'sharedlib'
@@ -129,6 +130,11 @@ project 'zenzebu'
 
     links { 'zenzebu-lua', 'zenzebu-glfw', 'zenzebu-glad' }
 
+    prebuildcommands {
+        'lua %{prj.location}/codegen/mat-uniforms.lua > %{prj.location}/generated/mat-uniforms.lua.h',
+        'lua %{prj.location}/codegen/vec-uniforms.lua > %{prj.location}/generated/vec-uniforms.lua.h'
+    }
+
     -- defines { 'ZZ_USEPCH' }
 
     filter "system:linux"
@@ -148,7 +154,7 @@ project 'zenzebu'
         files { "platform/windows/**.cc", "platform/linux/**.h" }
 
 inc_dir.all = {
-    inc_dir.zz,
+    inc_dir.zz, inc_dir.zzroot,
     inc_dir.entt,
     inc_dir.glad, inc_dir.glfw, inc_dir.glm,
     inc_dir.lua,

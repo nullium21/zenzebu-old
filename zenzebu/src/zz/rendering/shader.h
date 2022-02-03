@@ -8,6 +8,8 @@
 #include "gl.h"
 #include "texture.h"
 #include "glm/glm.hpp"
+#include <glm/gtc/type_ptr.hpp>
+#include <glad/glad.h>
 
 namespace zz::render {
     struct attribute {
@@ -54,21 +56,8 @@ namespace zz::render {
 
         void use();
 
-        void uniform(std::string name, float x);
-        void uniform(std::string name, int x);
-        void uniform(std::string name, uint x);
-
-        void uniform(std::string name, float x, float y);
-        void uniform(std::string name, int x, int y);
-        void uniform(std::string name, uint x, uint y);
-
-        void uniform(std::string name, float x, float y, float z);
-        void uniform(std::string name, int x, int y, int z);
-        void uniform(std::string name, uint x, uint y, uint z);
-
-        void uniform(std::string name, float x, float y, float z, float w);
-        void uniform(std::string name, int x, int y, int z, int w);
-        void uniform(std::string name, uint x, uint y, uint z, uint w);
+        #include "generated/vec-uniforms.lua.h"
+        #include "generated/mat-uniforms.lua.h"
 
         void texture(std::string name, int unit, const texture &tex);
 

@@ -234,22 +234,6 @@ bool shader::is_initialized() { return id >= 0; }
 
 void shader::use() { glUseProgram(id); }
 
-void shader::uniform(std::string name, float x) { SET_UNIFORM(1f, float1, x); }
-void shader::uniform(std::string name,   int x) { SET_UNIFORM(1i,   int1, x); }
-void shader::uniform(std::string name,  uint x) { SET_UNIFORM(1ui, uint1, x); }
-
-void shader::uniform(std::string name, float x, float y) { SET_UNIFORM(2f, float2, x, y); }
-void shader::uniform(std::string name,   int x,   int y) { SET_UNIFORM(2i,   int2, x, y); }
-void shader::uniform(std::string name,  uint x,  uint y) { SET_UNIFORM(2ui, uint2, x, y); }
-
-void shader::uniform(std::string name, float x, float y, float z) { SET_UNIFORM(3f, float3, x, y, z); }
-void shader::uniform(std::string name,   int x,   int y,   int z) { SET_UNIFORM(3i,   int3, x, y, z); }
-void shader::uniform(std::string name,  uint x,  uint y,  uint z) { SET_UNIFORM(3ui, uint3, x, y, z); }
-
-void shader::uniform(std::string name, float x, float y, float z, float w) { SET_UNIFORM(4f, float4, x, y, z, w); }
-void shader::uniform(std::string name,   int x,   int y,   int z,   int w) { SET_UNIFORM(4i,   int4, x, y, z, w); }
-void shader::uniform(std::string name,  uint x,  uint y,  uint z,  uint w) { SET_UNIFORM(4ui, uint4, x, y, z, w); }
-
 void shader::texture(std::string name, int unit, class texture const &tex) {
     glActiveTexture(GL_TEXTURE0 + unit);
     tex.use();
