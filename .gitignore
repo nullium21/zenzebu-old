@@ -13,3 +13,5 @@ compile_commands.json
 .clangd/
 /cmake-build-debug/
 .cache/
+
+zenzebu/generated/*.h
