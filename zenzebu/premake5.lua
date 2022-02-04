@@ -136,7 +136,8 @@ project 'zenzebu'
 
     prebuildcommands {
         codegen 'mat-uniforms.lua',
-        codegen 'vec-uniforms.lua'
+        codegen 'vec-uniforms.lua',
+        codegen 'gl-datatypes.lua',
     }
 
     -- defines { 'ZZ_USEPCH' }

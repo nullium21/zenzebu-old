@@ -17,11 +17,7 @@ namespace zz::render {
     };
 
     enum class data_type: unsigned int {
-        float1, int1, uint1,
-        float2, int2, uint2,
-        float3, int3, uint3,
-        float4, int4, uint4,
-        sampler2d,
+        #include "generated/gl-datatypes.lua.h"
     };
 
     class opengl {
