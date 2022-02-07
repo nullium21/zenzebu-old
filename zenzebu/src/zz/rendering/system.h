@@ -8,6 +8,7 @@
 #include "zz/rendering/meshbuffer.h"
 #include "zz/rendering/shader.h"
 #include "zz/rendering/transform.h"
+#include "zz/rendering/camera.h"
 #include "glm/vec3.hpp"
 
 namespace zz::render {
@@ -29,6 +30,8 @@ namespace zz::render {
 				if (rt.window == nullptr) return;
 				rt.window->use();
 
+				auto cam = ecs::entt()->try_get<camera>(e);
+
 				for (entity child : children.children) {
 					auto buf = ecs::entt()->try_get<meshbuffer<Vt>>(child);
 					if (buf == nullptr) continue;
@@ -43,6 +46,11 @@ namespace zz::render {
 
 					auto tfm = ecs::entt()->try_get<transform>(child);
 					if (tfm != nullptr) shd->uniform("transform", tfm->matrix);
+
+					if (cam != nullptr) {
+						shd->uniform("projection", cam->projection);
+						shd->uniform("view", cam->view);
+					}
 
 					buf->draw();
 				}

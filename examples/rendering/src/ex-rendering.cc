@@ -22,6 +22,9 @@ class rendering_app: public application {
         auto window_ent = entt->create();
         auto &wnd = entt->emplace<window>(window_ent, "rendering example", 1024, 768, true);
         auto &target = entt->emplace<window_render_target>(window_ent, &wnd);
+        auto &cam = entt->emplace<camera>(window_ent, 
+            glm::translate(glm::mat4(1.0), glm::vec3(0.0f, 0.0f, -3.0f)),
+            glm::perspective(90.0f, 1024.0f/768.0f, 0.1f, 100.0f));
         auto &children = entt->emplace<zz::component::children>(window_ent);
 
         auto mesh_ent = entt->create();
@@ -45,7 +48,7 @@ class rendering_app: public application {
 
         shader_code vert = {
             .prefix  = "#version 330 core\n",
-            .main    = "gl_Position = transform * vec4(pos, 1.0); tex_f = vec2(tex_v.x, tex_v.y);",
+            .main    = "gl_Position = projection * view * transform * vec4(pos, 1.0); tex_f = vec2(tex_v.x, tex_v.y);",
             .postfix = ""
         };
 
@@ -56,13 +59,15 @@ class rendering_app: public application {
         };
 
         std::vector<render::attribute> sh_attrs {
-            { "pos"      , datatype::float3, attribute::vertex_in },     // vertex   input : vert position
-            { "t"        , datatype::int1  , attribute::uniform },       // uniform        : time
-            { "fgc"      , datatype::float4, attribute::fragment_out },  // fragment output: color
-            { "tex_f"    , datatype::float2, attribute::fragment_in },   // fragment input : texture coords
-            { "tex_v"    , datatype::float2, attribute::vertex_in },     // vertex   input : texture coords
-            { "tex"      , datatype::sampler2d, attribute::uniform },    // uniform        : texture,
-            { "transform", datatype::mat4,   attribute::uniform },       // uniform        : transform matrix
+            { "pos"       , datatype::float3, attribute::vertex_in },     // vertex   input : vert position
+            { "t"         , datatype::int1  , attribute::uniform },       // uniform        : time
+            { "fgc"       , datatype::float4, attribute::fragment_out },  // fragment output: color
+            { "tex_f"     , datatype::float2, attribute::fragment_in },   // fragment input : texture coords
+            { "tex_v"     , datatype::float2, attribute::vertex_in },     // vertex   input : texture coords
+            { "tex"       , datatype::sampler2d, attribute::uniform },    // uniform        : texture,
+            { "transform" , datatype::mat4,   attribute::uniform },       // uniform        : transform matrix
+            { "projection", datatype::mat4,   attribute::uniform },       // uniform        : projection matrix
+            { "view"      , datatype::mat4,   attribute::uniform },       // uniform        : view matrix
         };
 
         auto &sh = entt->emplace<shader>(mesh_ent, vert, frag, sh_attrs);
@@ -93,7 +98,7 @@ class rendering_app: public application {
 
         // auto &tfm = entt->emplace<transform>(mesh_ent);
         auto &tfm = entt->emplace<transform>(mesh_ent, glm::mat4(1.0));
-        tfm.rotate_deg(glm::vec3(0, 1, 0), 75);
+        tfm.rotate_deg(glm::vec3(0, 1, 0), 40);
 
         wnd.use();
         sh.apply_attrs();
