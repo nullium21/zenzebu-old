@@ -9,6 +9,7 @@
 #include "zz/layer.h"
 
 #include "zz/rendering/gl.h"
+#include "zz/rendering/datatype.h"
 #include "zz/rendering/shader.h"
 #include "zz/rendering/meshbuffer.h"
 #include "zz/rendering/texture.h"

@@ -16,10 +16,6 @@ namespace zz::render {
         stream
     };
 
-    enum class data_type: unsigned int {
-        #include "generated/gl-datatypes.lua.h"
-    };
-
     class opengl {
         opengl() = delete;
         ~opengl() = delete;

@@ -1,5 +1,5 @@
-local function codegen(filename)
-    return 'lua %{prj.location}/codegen/' .. filename .. ' > %{prj.location}/generated/' .. filename .. '.h'
+local function codegen(filename, args)
+    return 'lua %{prj.location}/codegen/' .. filename .. ' ' .. (args or '') .. ' > %{prj.location}/generated/' .. filename .. '.h'
 end
 
 inc_dir = {}
@@ -138,7 +138,10 @@ project 'zenzebu'
         codegen 'mat-uniforms.lua',
         codegen 'vec-uniforms.lua',
         codegen 'gl-datatypes.lua',
+        codegen('shader-uniforms-switch.lua', '%{prj.location}/generated/gl-datatypes.lua.h'),
     }
+
+    disablewarnings { 'write-strings' }
 
     -- defines { 'ZZ_USEPCH' }
 

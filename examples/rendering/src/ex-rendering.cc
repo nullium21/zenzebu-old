@@ -1,3 +1,4 @@
+#include "zz/rendering/transform.h"
 extern "C" {
 #include <glad/glad.h>
 #include "GLFW/glfw3.h"
@@ -44,7 +45,7 @@ class rendering_app: public application {
 
         shader_code vert = {
             .prefix  = "#version 330 core\n",
-            .main    = "gl_Position = vec4(.5 * pos.x, .5 * pos.y, pos.z, 1.0); tex_f = vec2(tex_v.x, tex_v.y);",
+            .main    = "gl_Position = transform * vec4(pos, 1.0); tex_f = vec2(tex_v.x, tex_v.y);",
             .postfix = ""
         };
 
@@ -55,12 +56,13 @@ class rendering_app: public application {
         };
 
         std::vector<render::attribute> sh_attrs {
-            { "pos"  , data_type::float3, attribute::vertex_in },     // vertex   input : vert position
-            { "t"    , data_type::int1  , attribute::uniform },       // uniform        : time
-            { "fgc"  , data_type::float4, attribute::fragment_out },  // fragment output: color
-            { "tex_f", data_type::float2, attribute::fragment_in },   // fragment input : texture coords
-            { "tex_v", data_type::float2, attribute::vertex_in },     // vertex   input : texture coords
-            { "tex"  , data_type::sampler2d, attribute::uniform },    // uniform        : texture
+            { "pos"      , datatype::float3, attribute::vertex_in },     // vertex   input : vert position
+            { "t"        , datatype::int1  , attribute::uniform },       // uniform        : time
+            { "fgc"      , datatype::float4, attribute::fragment_out },  // fragment output: color
+            { "tex_f"    , datatype::float2, attribute::fragment_in },   // fragment input : texture coords
+            { "tex_v"    , datatype::float2, attribute::vertex_in },     // vertex   input : texture coords
+            { "tex"      , datatype::sampler2d, attribute::uniform },    // uniform        : texture,
+            { "transform", datatype::mat4,   attribute::uniform },       // uniform        : transform matrix
         };
 
         auto &sh = entt->emplace<shader>(mesh_ent, vert, frag, sh_attrs);
@@ -81,16 +83,17 @@ class rendering_app: public application {
 
         texture tex("examples/rendering/res/wall.jpg");
 
-        ZZ_INFO("before sparams creation");
-
         std::vector<shader_param> sparams {
-            { "t", data_type::int1, glm::vec<1, int>(0) },
-            { "tex", data_type::sampler2d, &tex }
+            { "t", datatype::int1, glm::vec<1, int>(0) },
+            { "tex", datatype::sampler2d, &tex },
+            { "transform", datatype::mat4, glm::mat4(1.0f) }
         };
 
-        ZZ_INFO("after sparams creation");
-
         auto &params = entt->emplace<shader_params_holder>(mesh_ent, sparams);
+
+        // auto &tfm = entt->emplace<transform>(mesh_ent);
+        auto &tfm = entt->emplace<transform>(mesh_ent, glm::mat4(1.0));
+        tfm.rotate_deg(glm::vec3(0, 1, 0), 75);
 
         wnd.use();
         sh.apply_attrs();

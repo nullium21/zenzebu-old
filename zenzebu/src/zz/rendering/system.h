@@ -7,6 +7,7 @@
 #include "zz/rendering/render_target.h"
 #include "zz/rendering/meshbuffer.h"
 #include "zz/rendering/shader.h"
+#include "zz/rendering/transform.h"
 #include "glm/vec3.hpp"
 
 namespace zz::render {
@@ -39,6 +40,9 @@ namespace zz::render {
 
 					auto params = ecs::entt()->try_get<shader_params_holder>(child);
 					if (params != nullptr) shd->uniforms(*params);
+
+					auto tfm = ecs::entt()->try_get<transform>(child);
+					if (tfm != nullptr) shd->uniform("transform", tfm->matrix);
 
 					buf->draw();
 				}
