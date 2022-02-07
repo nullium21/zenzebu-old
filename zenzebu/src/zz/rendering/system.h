@@ -2,6 +2,8 @@
 
 #define GLFW_INCLUDE_NONE
 
+#include <glad/glad.h>
+
 #include "zz/ecs.h"
 #include "zz/window.h"
 #include "zz/rendering/render_target.h"
@@ -9,13 +11,22 @@
 #include "zz/rendering/shader.h"
 #include "zz/rendering/transform.h"
 #include "zz/rendering/camera.h"
+#include "zz/rendering/gl.h"
 #include "glm/vec3.hpp"
 
 namespace zz::render {
 	class rendering {
 	public:
 		static bool init() {
-			return windowing::init();
+			if (windowing::init()) {
+				opengl::load();
+
+				glEnable(GL_DEPTH_TEST);
+
+				return true;
+			}
+
+			return false;
 		}
 		static bool deinit() {
 			return windowing::deinit();
@@ -24,6 +35,8 @@ namespace zz::render {
 		// Vt = vertex data type
 		template<class Vt = glm::vec3>
 		static bool update() {
+			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
 			auto view = ecs::entt()->view<const window_render_target, const component::children>();
 
 			view.each([](entity e, const window_render_target &rt, const component::children children) {

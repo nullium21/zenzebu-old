@@ -2,6 +2,7 @@
 #include "zz/log.h"
 #endif
 
+#include <glad/glad.h>
 #include "GLFW/glfw3.h"
 #include "zz/ecs.h"
 #include "zz/window.h"

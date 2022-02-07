@@ -36,8 +36,6 @@ class rendering_app: public application {
         rendering::init();
         wnd.use();
 
-        opengl::load();
-
         char *glver = (char *) glGetString(GL_VERSION);
         ZZ_INFO("GL version: {}", glver);
 
@@ -73,15 +71,35 @@ class rendering_app: public application {
         auto &sh = entt->emplace<shader>(mesh_ent, vert, frag, sh_attrs);
 
         std::vector<textured_vert> verts {
-            { {  1,  1, 0 }, { 1, 1 } },
-            { {  1, -1, 0 }, { 1, 0 } },
-            { { -1, -1, 0 }, { 0, 0 } },
-            { { -1,  1, 0 }, { 0, 1 } }
+            { { -1.0, -1.0,  1.0, }, { 0, 1 } },
+            { {  1.0, -1.0,  1.0, }, { 1, 1 } },
+            { {  1.0,  1.0,  1.0, }, { 1, 0 } },
+            { { -1.0,  1.0,  1.0, }, { 0, 0 } },
+
+            { { -1.0, -1.0, -1.0, }, { 1, 0 } },
+            { {  1.0, -1.0, -1.0, }, { 0, 0 } },
+            { {  1.0,  1.0, -1.0, }, { 0, 1 } },
+            { { -1.0,  1.0, -1.0, }, { 1, 1 } },
         };
 
         std::vector<int> idxs {
-            0, 1, 3,
-            1, 2, 3
+            0, 1, 2,
+            2, 3, 0,
+            // right
+            1, 5, 6,
+            6, 2, 1,
+            // back
+            7, 6, 5,
+            5, 4, 7,
+            // left
+            4, 0, 3,
+            3, 7, 4,
+            // bottom
+            4, 5, 1,
+            1, 0, 4,
+            // top
+            3, 2, 6,
+            6, 7, 3
         };
 
         auto &msh = entt->emplace<meshbuffer<textured_vert>>(mesh_ent, verts, idxs, draw_type::static_draw);
@@ -98,7 +116,7 @@ class rendering_app: public application {
 
         // auto &tfm = entt->emplace<transform>(mesh_ent);
         auto &tfm = entt->emplace<transform>(mesh_ent, glm::mat4(1.0));
-        tfm.rotate_deg(glm::vec3(0, 1, 0), 40);
+        // tfm.rotate_deg(glm::vec3(0, 1, 0), 0);
 
         wnd.use();
         sh.apply_attrs();
@@ -112,11 +130,7 @@ class rendering_app: public application {
             // ZZ_INFO("{} NE={} IE={} IV={} IO={} IF={} OM={}", glGetError(),
             //     GL_NO_ERROR, GL_INVALID_ENUM, GL_INVALID_VALUE, GL_INVALID_OPERATION, GL_INVALID_FRAMEBUFFER_OPERATION, GL_OUT_OF_MEMORY);
 
-            t += dt;
-            if (t >= 1024) dt = -1;
-            if (t <=    0) dt = +1;
-            if (dt <    0) dt--;
-            if (dt >=   0) dt++;
+            tfm.rotate_deg(glm::vec3(0, 0.7071, 0.7071), 0.5f);
         } while (rendering::update<textured_vert>());
 
         wnd.use();
