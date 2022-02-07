@@ -4,6 +4,7 @@
 
 namespace zz::render {
 	struct camera {
-		glm::mat4 view, projection;
+		glm::mat4 projection;
+		glm::vec3 pos, target;
 	};
 }

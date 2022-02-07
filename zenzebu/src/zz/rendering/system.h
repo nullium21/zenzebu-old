@@ -13,6 +13,7 @@
 #include "zz/rendering/camera.h"
 #include "zz/rendering/gl.h"
 #include "glm/vec3.hpp"
+#include "glm/gtc/matrix_transform.hpp"
 
 namespace zz::render {
 	class rendering {
@@ -44,6 +45,12 @@ namespace zz::render {
 				rt.window->use();
 
 				auto cam = ecs::entt()->try_get<camera>(e);
+				if (cam == nullptr) return;
+
+				auto cdirinv = glm::normalize(cam->pos - cam->target);
+				auto cright  = glm::normalize(glm::cross(glm::vec3(0, 1, 0), cdirinv));
+				auto cup     = glm::cross(cdirinv, cright);
+				auto cview   = glm::lookAt(cam->pos, glm::vec3(0, 0, 0), cup);
 
 				for (entity child : children.children) {
 					auto buf = ecs::entt()->try_get<meshbuffer<Vt>>(child);
@@ -62,7 +69,7 @@ namespace zz::render {
 
 					if (cam != nullptr) {
 						shd->uniform("projection", cam->projection);
-						shd->uniform("view", cam->view);
+						shd->uniform("view", cview);
 					}
 
 					buf->draw();

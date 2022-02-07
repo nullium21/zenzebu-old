@@ -22,9 +22,9 @@ class rendering_app: public application {
         auto window_ent = entt->create();
         auto &wnd = entt->emplace<window>(window_ent, "rendering example", 1024, 768, true);
         auto &target = entt->emplace<window_render_target>(window_ent, &wnd);
-        auto &cam = entt->emplace<camera>(window_ent, 
-            glm::translate(glm::mat4(1.0), glm::vec3(0.0f, 0.0f, -3.0f)),
-            glm::perspective(90.0f, 1024.0f/768.0f, 0.1f, 100.0f));
+        auto &cam = entt->emplace<camera>(window_ent,
+            glm::perspective(90.0f, 1024.0f/768.0f, 0.1f, 100.0f),
+            glm::vec3(0.0f, 1.0f, -3.0f), glm::vec3(0));
         auto &children = entt->emplace<zz::component::children>(window_ent);
 
         auto mesh_ent = entt->create();
